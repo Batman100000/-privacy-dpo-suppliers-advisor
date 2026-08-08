@@ -1,69 +1,62 @@
 # Privacy Advisor Tool — Changelog
 
+## v1.8.3.3 (2026-08-08)
+
+### Enhanced Explanations - Results Clarity
+- **Results Summary:** Added detailed explanations for each risk level:
+  - ✅ **Pass:** "כל קבוצות הלקוחות בהתאמה מלאה" - no action needed
+  - ❌ **High Risk:** "מרווח משפטי!" - explains what legal gap means + required actions
+  - 🟠 **Partial Risk:** Explains partial matches + DPA/Sub-processor checks
+  
+- **Groups Table Enhanced:**
+  - Added explanation column for each group
+  - ✅ Green: "Region matches, no action"
+  - ❌ Red (with DPA): "Legal gap exists but DPA signed - review coverage"
+  - ❌ Red (planned DPA): "Legal gap + DPA in process - ensure implementation"
+  - ❌ Red (no DPA): "⚠️ CRITICAL: Legal gap without DPA - must sign or change region"
+  - 🟠 Orange: "Partial risk - check Sub-processors details"
+
+- **GDPR Legal Basis:** Added comprehensive explanation box:
+  - What is a legal basis and why it matters
+  - Consequences of choosing wrong basis
+  - Examples of common mistakes
+  - Validation reminder to match real business practices
+
+- **Impact:** Users now understand exactly what each status means and what to do about it
+
+---
+
 ## v1.8.3.2 (2026-08-08)
 
 ### UI Clarity Improvements - Results Page Redesign
-- **Issue:** Results page was cluttered with verbose explanations, making key findings unclear
-- **Changes:**
-  1. **First Page:** "מזהה ספק" → "שם הספק" (clearer label)
-  2. **Tree Navigation:** Updated to "שם הספק" for consistency
-  3. **Groups Section Redesign:**
-     - Removed verbose "🔍 מה בדקנו?" explanation
-     - Added concise "🔄 ההשוואה:" with real example
-     - Simplified result summary: clear pass/fail/risk status
-     - Changed table headers from "דרישה חוזית / מתקיים? / דרישות פרטיות" to "דורש / מצב / פעולה נדרשת" (more actionable)
-     - Shortened action text from "📋 בדוק: יש DPA - אולי צריך עדכון" to "📋 יש DPA - בדוק" (cleaner)
-     - Better visual hierarchy with status-first summary
-
-- **Impact:** 
-  - Clearer first impression
-  - Easier to understand group analysis at a glance
-  - More action-oriented language
-  - Better mobile/desktop presentation
+- Renamed "מזהה ספק" to "שם הספק"
+- Simplified groups section explanations
+- Changed table headers to be more action-oriented: "דורש / מצב / פעולה נדרשת"
+- Shortened action text for clarity
 
 ---
 
 ## v1.8.3.1 (2026-08-08)
 
 ### Smart HIPAA Filtering - Only Shows for Medical Data
-- Added conditional logic to only show HIPAA question if medical/PHI data selected
+- HIPAA question only appears if medical/PHI data was selected
 - Added `hasPhysicalData()` function
-- Updated `totalSteps()`, `nextRegStep()`, `nextReg()` logic
-- Cleaner flow for non-medical workflows
+- Updated navigation logic
 
 ---
 
 ## v1.8.3.0 (2026-08-08)
 
 ### Major Release - Simplified Groups & Smart DPA Analysis
-- Customer Groups Simplified: EU/EEA → EU
-- Vendor Regions: Removed UK
-- Smart DPA Analysis with conditional recommendations
+- Simplified customer groups: EU/EEA → EU
+- Removed UK from vendor regions
+- Smart DPA recommendations based on responses
 
 ---
 
-## v1.8.2.9 (2026-08-08)
+## v1.8.2.9-v1.8.2.4
 
-### Update 5/5 - Enhanced Groups Analysis Section
-- Clear testing explanation and outcomes
-- Summary statistics with pass/fail/risk counts
-
----
-
-## v1.8.2.8 (2026-08-08)
-
-### Update 4/5 - Vendor Region Simplification
-- Simplified question to "אזורי אחסון הספק? 🏪"
-- Moved logic to detailed explanation box
-
----
-
-## v1.8.2.7 (2026-08-08)
-
-### Updates 3, 2, 1/5
-- Fixed progress bar (119% → 100%)
-- Enhanced IL Taqana 15 documentation
-- Simplified GDPR legal basis question
+Previous release cycles with progressive improvements
 
 ---
 
