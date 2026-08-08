@@ -1,5 +1,22 @@
 # Privacy Advisor Tool — Changelog
 
+## v1.8.2.9 (2026-08-08)
+
+### Update 5/5 - Enhanced Groups Analysis Section
+- **Change:** Completely redesigned "קבוצות לקוחות" (Customer Groups) result display
+- **Added:**
+  - Clear explanation of what was tested (which vendor regions vs. which customer groups)
+  - Three possible outcomes with color-coded indicators
+  - Summary statistics: Pass count, Fail count, Risk count
+  - Vendor region reference in explanation
+- **Details:**
+  - ✅ **התאמה** = Vendor region matches customer requirement
+  - ❌ **אין התאמה** = Legal risk! Customer requirement not met
+  - 🟠 **חלקי/אין דרישה** = Partial match or no clear requirement defined
+- **Impact:** Users now see exactly what was tested and what the risks are for each customer group
+
+---
+
 ## v1.8.2.8 (2026-08-08)
 
 ### Update 4/5 - Vendor Region Storage Simplification
