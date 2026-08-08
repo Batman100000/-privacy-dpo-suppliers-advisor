@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>יועץ פרטיות לנושא עבודה עם ספקים — v1.8.2.6</title>
+<html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>יועץ פרטיות לנושא עבודה עם ספקים — v1.8.2.7</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
@@ -50,7 +50,7 @@ table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}th,td{b
 <button class="lang-btn active" onclick="setLang('he')">עברית</button>
 <button class="lang-btn" onclick="setLang('en')">English</button>
 </div>
-<span class="version">v1.8.2.6</span>
+<span class="version">v1.8.2.7</span>
 </header>
 <div class="wrap">
 <div class="toolbar" role="toolbar" aria-label="פעולות">
@@ -93,7 +93,7 @@ table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}th,td{b
 </div>
 <div id="historyContent"></div></aside>
 <aside class="drawer" id="treeDrawer" role="dialog" aria-modal="true" aria-labelledby="treeTitle" style="width:min(440px,96vw)"><button class="close" onclick="closeAll()">סגור ✕</button><h2 id="treeTitle">🗺️ מפה</h2><div class="tree" id="treeContent"></div></aside>
-<aside class="drawer" id="versionDrawer" role="dialog" aria-modal="true" aria-labelledby="versionTitle" style="width:min(420px,95vw)"><button class="close" onclick="closeAll()">סגור ✕</button><h2 id="versionTitle">📌 גרסה 1.8.2.6</h2>
+<aside class="drawer" id="versionDrawer" role="dialog" aria-modal="true" aria-labelledby="versionTitle" style="width:min(420px,95vw)"><button class="close" onclick="closeAll()">סגור ✕</button><h2 id="versionTitle">📌 גרסה 1.8.2.7</h2>
 <div style="font-size:13px;line-height:1.6;color:#334155">
 <div style="background:#eef5ff;border-right:4px solid var(--b);border-radius:8px;padding:11px 13px;margin-bottom:12px"><b>שינויים:</b></div>
 <ol style="padding-right:18px;margin:8px 0">
@@ -150,11 +150,12 @@ function maskVendor(v){v=(v||'').trim().replace(/[^A-Za-z0-9\u0590-\u05FF \-_]/g
 function maskPerson(v){let p=(v||'').trim().split(/\s+/);return p.length===0?'—':p.length===1?p[0]:p[0]+' '+p[p.length-1][0]+'׳'}
 
 function totalSteps(){
-  let n=12;
-  if(hasReg('GDPR')||hasReg('UK GDPR'))n+=2;
-  if(hasReg('CCPA / CPRA'))n+=2;
-  if(hasReg('IL Privacy'))n+=2;
-  if(hasReg('HIPAA'))n+=1;
+  let n=12; // base steps: names, bizModel, regulations, groups, dataTypes, subjects, sensitive, dpa, subs, vendorRegion, externalAccess, result
+  n+=S.groups.length; // Add one step per group (grpContract_[group])
+  if(hasReg('GDPR')||hasReg('UK GDPR'))n+=2; // regGdprBasis, regGdprDpia
+  if(hasReg('CCPA / CPRA'))n+=2; // regCcpaSale, regCcpaOptout
+  if(hasReg('IL Privacy'))n+=2; // regIlMachzik, regIlTaqana
+  if(hasReg('HIPAA'))n+=1; // regHipaaBaa
   return n;
 }
 
