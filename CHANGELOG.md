@@ -1,5 +1,21 @@
 # Privacy Advisor Tool — Changelog
 
+## v1.8.2.8 (2026-08-08)
+
+### Update 4/5 - Vendor Region Storage Simplification
+- **From:** "איפה הספק שומר את המידע בפועל? 🏪"
+- **To:** "אזורי אחסון הספק? 🏪"
+- **Explanation:** Moved comprehensive region logic to detailed box below
+- **Details:** Now includes:
+  - Why we ask per region (different requirements per area)
+  - Region examples (Israel, EU, US)
+  - Clear distinction between:
+    - **Region ספק** = fact (actual storage location)
+    - **Region דרישה** = law (contract requirement)
+  - Compliance warning (red 🔴 if mismatch)
+
+---
+
 ## v1.8.2.7 (2026-08-08)
 
 ### Update 3/5 - Fixed Progress Bar
