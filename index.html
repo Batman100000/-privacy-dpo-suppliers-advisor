@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>יועץ פרטיות לנושא עבודה עם ספקים — v1.8.2.5</title>
+<html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>יועץ פרטיות לנושא עבודה עם ספקים — v1.8.2.6</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
@@ -50,7 +50,7 @@ table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}th,td{b
 <button class="lang-btn active" onclick="setLang('he')">עברית</button>
 <button class="lang-btn" onclick="setLang('en')">English</button>
 </div>
-<span class="version">v1.8.2.5</span>
+<span class="version">v1.8.2.6</span>
 </header>
 <div class="wrap">
 <div class="toolbar" role="toolbar" aria-label="פעולות">
@@ -93,7 +93,7 @@ table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}th,td{b
 </div>
 <div id="historyContent"></div></aside>
 <aside class="drawer" id="treeDrawer" role="dialog" aria-modal="true" aria-labelledby="treeTitle" style="width:min(440px,96vw)"><button class="close" onclick="closeAll()">סגור ✕</button><h2 id="treeTitle">🗺️ מפה</h2><div class="tree" id="treeContent"></div></aside>
-<aside class="drawer" id="versionDrawer" role="dialog" aria-modal="true" aria-labelledby="versionTitle" style="width:min(420px,95vw)"><button class="close" onclick="closeAll()">סגור ✕</button><h2 id="versionTitle">📌 גרסה 1.8.2.5</h2>
+<aside class="drawer" id="versionDrawer" role="dialog" aria-modal="true" aria-labelledby="versionTitle" style="width:min(420px,95vw)"><button class="close" onclick="closeAll()">סגור ✕</button><h2 id="versionTitle">📌 גרסה 1.8.2.6</h2>
 <div style="font-size:13px;line-height:1.6;color:#334155">
 <div style="background:#eef5ff;border-right:4px solid var(--b);border-radius:8px;padding:11px 13px;margin-bottom:12px"><b>שינויים:</b></div>
 <ol style="padding-right:18px;margin:8px 0">
@@ -282,7 +282,7 @@ function render(){
   if(step==='regCcpaSale')return renderYN('regCcpaSale','<span class="regbadge ccpa">CCPA</span> Sale/Share of PI?','האם הספק מוכר או משתף מידע תמורת תועלת?');
   if(step==='regCcpaOptout')return renderYN('regCcpaOptout','<span class="regbadge ccpa">CCPA</span> Opt-out?','יש כפתור "Do Not Sell/Share"?');
   if(step==='regIlMachzik')return renderYN('regIlMachzik','<span class="regbadge il">IL</span> ספק כמחזיק?','הוגדר בחוזה כמחזיק מידע?');
-  if(step==='regIlTaqana')return renderYN('regIlTaqana','<span class="regbadge il">IL</span> תקנה 15?','תיעוד מלא של המחזיק?');
+  if(step==='regIlTaqana')return renderYN('regIlTaqana','<span class="regbadge il">IL</span> תקנה 15?','<b>תקנה 15 לחוק הגנת הפרטיות:</b> מחזיק המידע חייב לתעד בכתב את פעולותיו בטיפול בנתונים.<br><br><b>חובות תיעוד:</b><br>• <b>מטרת העיבוד</b> — למה מעבדים את הנתונים?<br>• <b>סוגי מידע</b> — אילו נתונים נשמרים?<br>• <b>משך שמירה</b> — כמה זמן שומרים?<br>• <b>תהליכי ביטחון</b> — איך מגנים על הנתונים?<br>• <b>גישה ומעברים</b> — מי יכול לגשת? להעביר?<br><br><b>עבור ספק (מחזיק):</b> יש לשמור תיעוד מלא ויכול להציג לפקח ובעל הנתונים בדרישה.');
   if(step==='regHipaaBaa')return renderYN('regHipaaBaa','<span class="regbadge hipaa">HIPAA</span> BAA חתום?','לכל גורם שמקבל PHI.');
   if(step==='externalAccess')return renderYN('externalAccess','🌐 גישה חוצת Region?','<b>האם הספק משתמש בספקים משניים (sub-processors) או בתמיכה טכנית שממוקמת בRegion שונה?</b><br><b>דוגמה:</b> ספק שומר את הנתונים בEU, אבל לוג גישה או תמיכה טכנית מ-US.');
   if(step==='transferMech')return renderYN('transferMech','🔐 מנגנון העברה?','SCC, Adequacy, IDTA או מנגנון חוקי אחר?');
