@@ -1,0 +1,43 @@
+# 🔐 Security: Never commit secrets!
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Git credentials
+.git-credentials
+git-credentials
+credentials.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Node/npm
+node_modules/
+package-lock.json
+yarn.lock
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Temporary
+*.tmp
+*.temp
+.cache/
+
+# Secrets (explicit)
+secrets/
+secrets.txt
+*.key
+*.pem
