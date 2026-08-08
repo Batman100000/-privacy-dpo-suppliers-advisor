@@ -1,71 +1,61 @@
 # Privacy Advisor Tool — Changelog
 
+## v1.8.3.1 (2026-08-08)
+
+### Smart Regulation Filtering - HIPAA Only Shows for Medical Data
+- **Issue:** HIPAA BAA question appeared even when no medical/PHI data was selected
+- **Fix:** Added conditional logic to only show HIPAA question if:
+  - HIPAA is in selected regulations AND
+  - User selected "רפואי" (medical) in dataTypes
+- **Changes:**
+  - Added `hasPhysicalData()` function to check if medical data was selected
+  - Updated `totalSteps()` to only count HIPAA step when medical data present
+  - Updated `nextRegStep()` to skip HIPAA question if no medical data
+  - Updated `nextReg()` navigation to respect medical data check
+- **Impact:** Cleaner flow for non-medical data handling - users won't see HIPAA questions if they don't have PHI
+
+---
+
 ## v1.8.3.0 (2026-08-08)
 
 ### Major Release - Simplified Groups & Smart DPA Analysis
-- **What Changed:**
-  - **Customer Groups Simplified:** Removed "EU / EEA" separate option → Now just "EU" (cleaner)
-  - **Vendor Regions Simplified:** Removed "UK" → Consolidated to EU, US, IL, Global
-  - **Smart DPA Analysis:** Groups table now shows intelligent DPA recommendations based on actual answers
-  
+- **Customer Groups Simplified:** Removed "EU / EEA" separate option → Now just "EU"
+- **Vendor Regions Simplified:** Removed "UK" → Consolidated to EU, US, IL, Global
+- **Smart DPA Analysis:** Groups table shows intelligent DPA recommendations based on answers
 - **New Logic:**
   - ✅ **Region Match:** "✅ Region תואם" - No action needed
-  - ❌ **Region Mismatch with DPA:** "📋 בדוק: יש DPA - אולי צריך עדכון" - Review existing DPA
-  - ❌ **Region Mismatch, DPA Planned:** "📋 בדוק: DPA מתוכנן - הוסף לתקופת ההטמעה" - Add to implementation plan
-  - ❌ **Region Mismatch, No DPA:** "❌ חיוני: יש מרווח משפטי - דרוש DPA" - Critical legal gap
-  - 🟠 **Partial Match:** "🟠 בדוק Sub-processors + DPA" - Review both elements
-
-- **Impact:** Users now get actionable DPA guidance based on their specific responses
+  - ❌ **Region Mismatch with DPA:** "📋 בדוק: יש DPA - אולי צריך עדכון"
+  - ❌ **Region Mismatch, DPA Planned:** "📋 בדוק: DPA מתוכנן - הוסף לתקופת ההטמעה"
+  - ❌ **Region Mismatch, No DPA:** "❌ חיוני: יש מרווח משפטי - דרוש DPA"
+  - 🟠 **Partial Match:** "🟠 בדוק Sub-processors + DPA"
 
 ---
 
 ## v1.8.2.9 (2026-08-08)
 
 ### Update 5/5 - Enhanced Groups Analysis Section
-- **Change:** Completely redesigned "קבוצות לקוחות" (Customer Groups) result display
-- **Added:**
-  - Clear explanation of what was tested (which vendor regions vs. which customer groups)
-  - Three possible outcomes with color-coded indicators
-  - Summary statistics: Pass count, Fail count, Risk count
-  - Vendor region reference in explanation
-- **Details:**
-  - ✅ **התאמה** = Vendor region matches customer requirement
-  - ❌ **אין התאמה** = Legal risk! Customer requirement not met
-  - 🟠 **חלקי/אין דרישה** = Partial match or no clear requirement defined
-- **Impact:** Users now see exactly what was tested and what the risks are for each customer group
+- Clear explanation of what was tested
+- Three possible outcomes with color-coded indicators
+- Summary statistics: Pass count, Fail count, Risk count
+- Vendor region reference in explanation
 
 ---
 
 ## v1.8.2.8 (2026-08-08)
 
 ### Update 4/5 - Vendor Region Storage Simplification
-- **From:** "איפה הספק שומר את המידע בפועל? 🏪"
-- **To:** "אזורי אחסון הספק? 🏪"
-- **Explanation:** Moved comprehensive region logic to detailed box below
-- **Details:** Now includes:
-  - Why we ask per region (different requirements per area)
-  - Region examples (Israel, EU, US)
-  - Clear distinction between Region ספק (fact) and Region דרישה (law)
-  - Compliance warning (red 🔴 if mismatch)
+- From: "איפה הספק שומר את המידע בפועל? 🏪"
+- To: "אזורי אחסון הספק? 🏪"
+- Moved comprehensive region logic to detailed box below
 
 ---
 
 ## v1.8.2.7 (2026-08-08)
 
-### Update 3/5 - Fixed Progress Bar
-- **Issue:** Progress bar showed 119% instead of max 100%
-- **Root Cause:** `totalSteps()` didn't count dynamic `grpContract_[group]` steps
-- **Fix:** Added `n += S.groups.length` to calculation
-- **Impact:** Progress now accurately reflects total steps including all groups
-
-### Update 2/5 - IL Taqana 15 Documentation
-- **Change:** Enhanced explanation for IL Privacy Regulation 15
-- **Details:** Added comprehensive documentation requirements
-
-### Update 1/5 - GDPR Legal Basis Simplification
-- **From:** "איזה סיבה חוקית הספק יכול לעבד את המידע? (Art.6)"
-- **To:** "בסיס חוקי (Art.6)?"
-- **Impact:** Cleaner UI, better readability
+### Updates 3, 2, 1/5
+- Fixed progress bar (was showing 119%)
+- Enhanced IL Taqana 15 documentation
+- Simplified GDPR legal basis question
 
 ---
 
