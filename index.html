@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>יועץ פרטיות לנושא עבודה עם ספקים — v1.8.2.3</title>
+<html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>יועץ פרטיות לנושא עבודה עם ספקים — v1.8.2.4</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
@@ -50,7 +50,7 @@ table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}th,td{b
 <button class="lang-btn active" onclick="setLang('he')">עברית</button>
 <button class="lang-btn" onclick="setLang('en')">English</button>
 </div>
-<span class="version">v1.8.2.3</span>
+<span class="version">v1.8.2.4</span>
 </header>
 <div class="wrap">
 <div class="toolbar" role="toolbar" aria-label="פעולות">
@@ -93,7 +93,7 @@ table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}th,td{b
 </div>
 <div id="historyContent"></div></aside>
 <aside class="drawer" id="treeDrawer" role="dialog" aria-modal="true" aria-labelledby="treeTitle" style="width:min(440px,96vw)"><button class="close" onclick="closeAll()">סגור ✕</button><h2 id="treeTitle">🗺️ מפה</h2><div class="tree" id="treeContent"></div></aside>
-<aside class="drawer" id="versionDrawer" role="dialog" aria-modal="true" aria-labelledby="versionTitle" style="width:min(420px,95vw)"><button class="close" onclick="closeAll()">סגור ✕</button><h2 id="versionTitle">📌 גרסה 1.8.2.3</h2>
+<aside class="drawer" id="versionDrawer" role="dialog" aria-modal="true" aria-labelledby="versionTitle" style="width:min(420px,95vw)"><button class="close" onclick="closeAll()">סגור ✕</button><h2 id="versionTitle">📌 גרסה 1.8.2.4</h2>
 <div style="font-size:13px;line-height:1.6;color:#334155">
 <div style="background:#eef5ff;border-right:4px solid var(--b);border-radius:8px;padding:11px 13px;margin-bottom:12px"><b>שינויים:</b></div>
 <ol style="padding-right:18px;margin:8px 0">
@@ -256,12 +256,24 @@ function render(){
   if(step==='dataTypes')return renderMulti('dataTypes','📋 סוגי מידע',DATA_TYPES,'איזה מידע עובר לספק?');
   if(step==='subjects')return renderMulti('subjects','👥 נושאי המידע',SUBJECTS,'על מי המידע מתייחס?');
   if(step==='sensitive')return renderMulti('sensitive','🚨 מידע רגיש',SENSITIVE,'יש מידע רגיש בקטגוריות אלה?');
-  if(step==='dpa')return renderYN('dpa','האם יש כיום 📄 DPA חתום? או האם מתוכנן DPA כחלק מהתהליך של החוזה ?','<b>חובה לפי כל החוקים.</b> ללא DPA — אין להעביר מידע.');
-  if(step==='subs')return renderYN('subs','🔗 האם לספק יש רשימה של Sub-processors מתועדת?','צדדים שלישיים שהספק משתמש בהם (ענן, כלים, שירותים). דרישת GDPR Art.28 וחוק IL.');
+  if(step==='dpa')return renderYN('dpa','האם יש כבר 📄 DPA חתום ? או האם מתוכנן להיות חתום ?','<b>חובה לפי כל החוקים.</b> ללא DPA — אין להעביר מידע.');
+  if(step==='subs')return renderYN('subs','🔗 האם יש כבר Sub-processors מתועדים ? או האם מתוכנן להעביר רשימה ?','צדדים שלישיים שהספק משתמש בהם (ענן, כלים, שירותים). דרישת GDPR Art.28 וחוק IL.');
   if(step==='vendorRegion')return renderMulti('vendorRegion','איפה הספק שומר את המידע בפועל? 🏪',VENDOR_REGIONS,'<b>בחר את כל האזורים שבהם הספק שומר פועלית את המידע.</b> אפשר לבחור יותר מאחד — נניח גם ארה״ב וגם אירופה. זה יעזור לבדוק התאמה עם דרישות הלקוחות.');
   
   // Per-group
-  if(step.startsWith('grpContract_')){let g=step.split('_')[1];let explain="<div style=\"background:#f3f4f6;border-right:4px solid #1f2937;border-radius:8px;padding:13px 14px;margin-bottom:14px;font-size:13px;line-height:1.6;color:#1f2937\">\n<b>🔍 למה שואלים את זה לכל אזור בנפרד?</b><br><br>\nכל אזור לקוחות עשוי להיות בעל דרישות שונות:<br>\n• <b>ישראל:</b> יכול לדרוש שמירה בישראל בלבד<br>\n• <b>EU:</b> דורש GDPR + data residency בEU<br>\n• <b>ארה״ב:</b> עשוי להיות גמיש יותר<br><br>\n<b>ההבדל הגדול:</b><br>\n<b>Region ספק</b> = עובדה (איפה ספק בפועל שומר)<br>\n<b>דרישת Region</b> = משפט (מה חוזה דורש)<br><br>\nההשוואה: אם Region ספק לא תואם דרישה כלשהי, תוצאה אדומה 🔴<br><br>\n<b>השאלה לקבוצה זו:</b><br>\nהאם לקוחות החברה הגדירו ברמת החוזה שמירת מידע לאזור "+g+" בלבד?\n</div>";return renderRegionDist('grpContract_'+g,'סעיף Data Residency בחוזה: האם קיימת דרישה לשמור ב'+g+'?',explain);}
+  if(step.startsWith('grpContract_')){let g=step.split('_')[1];let explain=`<div style="background:#f3f4f6;border-right:4px solid #1f2937;border-radius:8px;padding:13px 14px;margin-bottom:14px;font-size:13px;line-height:1.6;color:#1f2937">
+<b>🔍 למה שואלים את זה לכל אזור בנפרד?</b><br><br>
+כל אזור לקוחות עשוי להיות בעל דרישות שונות:<br>
+• <b>ישראל:</b> יכול לדרוש שמירה בישראל בלבד<br>
+• <b>EU:</b> דורש GDPR + data residency בEU<br>
+• <b>ארה״ב:</b> עשוי להיות גמיש יותר<br><br>
+<b>ההבדל הגדול:</b><br>
+<b>Region ספק</b> = עובדה (איפה ספק בפועל שומר)<br>
+<b>דרישת Region</b> = משפט (מה חוזה דורש)<br><br>
+ההשוואה: אם Region ספק לא תואם דרישה כלשהי, תוצאה אדומה 🔴<br><br>
+<b>השאלה לקבוצה זו:</b><br>
+האם לקוחות החברה הגדירו ברמת החוזה שמירת מידע לאזור ${g} בנפרד?
+</div>`;return renderRegionDist('grpContract_'+g,g+' דרישת Region בחוזה?',explain);}
   if(step.startsWith('grpMatch_')){let g=step.split('_')[1];let vr=S.answers.vendorRegion?.v||'?';return renderSingle('grpMatch_'+g,'<span class="grpbadge">'+g+'</span> Region ספק ('+vr+') תואם?',['✅ כן','🟠 חלקי','❌ לא'],'בדוק מול דרישת החוזה.');}
 
   // Regulatory
@@ -292,11 +304,11 @@ function next(fromId){
   if(fromId.startsWith('grpContract_')){let g=fromId.split('_')[1];let ans=S.answers[fromId].v;if(ans==='לא - אין דרישה'){let gi=S.groups.indexOf(g);S.groupResults[g]={color:'green',note:'אין דרישה'};if(gi<S.groups.length-1){S.step='grpContract_'+S.groups[gi+1];render();return;}S.step=nextRegStep();render();return;}else{let vr=S.answers.vendorRegion?.v||'';let vendorRegions=vr.split(',').map(r=>r.trim());let groupMatches=vendorRegions.some(vr=>vr.includes(g));S.groupResults[g]={color:groupMatches?'green':'red',note:groupMatches?'התאמה':'אין התאמה'};if(!groupMatches)penalty(15);}let gi=S.groups.indexOf(g);if(gi<S.groups.length-1){S.step='grpContract_'+S.groups[gi+1];render();return;}S.step=nextRegStep();render();return;}
   if(fromId.startsWith('grpMatch_')){let g=fromId.split('_')[1];let ans=S.answers[fromId].v;if(ans==='✅ כן')S.groupResults[g]={color:'green',note:'התאמה'};else if(ans==='🟠 חלקי'){S.groupResults[g]={color:'orange',note:'חלקי'};penalty(10);}else{S.groupResults[g]={color:'red',note:'אין התאמה'};penalty(15);}let gi=S.groups.indexOf(g);if(gi<S.groups.length-1){S.step='grpContract_'+S.groups[gi+1];render();return;}S.step=nextRegStep();render();return;}
   if(fromId==='regGdprBasis'){S.gdprBasis=(S.answers.regGdprBasis?.labels)||[];S.step='regGdprDpia';render();return;}
-  if(fromId==='regGdprDpia'){S.step=nextAfterGdpr();render();return;}
-  if(fromId==='regCcpaSale'){S.step=S.answers.regCcpaSale.v==='כן'?'regCcpaOptout':nextAfterCcpa();render();return;}
-  if(fromId==='regCcpaOptout'){if(S.answers.regCcpaOptout.v==='לא')penalty(15);S.step=nextAfterCcpa();render();return;}
+  if(fromId==='regGdprDpia'){S.step=nextReg('regGdprDpia');render();return;}
+  if(fromId==='regCcpaSale'){S.step=S.answers.regCcpaSale.v==='כן'?'regCcpaOptout':nextReg('regCcpaSale');render();return;}
+  if(fromId==='regCcpaOptout'){if(S.answers.regCcpaOptout.v==='לא')penalty(15);S.step=nextReg('regCcpaOptout');render();return;}
   if(fromId==='regIlMachzik'){S.step='regIlTaqana';render();return;}
-  if(fromId==='regIlTaqana'){S.step=nextAfterIl();render();return;}
+  if(fromId==='regIlTaqana'){S.step=nextReg('regIlTaqana');render();return;}
   if(fromId==='regHipaaBaa'){if(S.answers.regHipaaBaa.v==='לא')penalty(40);S.step='externalAccess';render();return;}
   if(fromId==='externalAccess'){S.step='transferMech';render();return;}
   if(fromId==='transferMech'){if(S.answers.transferMech.v==='לא'){penalty(40);finishRed('חסר מנגנון העברה');return;}S.step='security';render();return;}
@@ -310,9 +322,12 @@ function nextRegStep(){
   if(hasReg('HIPAA'))return 'regHipaaBaa';
   return 'externalAccess';
 }
-function nextAfterGdpr(){if(hasReg('CCPA / CPRA'))return 'regCcpaSale';if(hasReg('IL Privacy'))return 'regIlMachzik';if(hasReg('HIPAA'))return 'regHipaaBaa';return 'externalAccess';}
-function nextAfterCcpa(){if(hasReg('IL Privacy'))return 'regIlMachzik';if(hasReg('HIPAA'))return 'regHipaaBaa';return 'externalAccess';}
-function nextAfterIl(){if(hasReg('HIPAA'))return 'regHipaaBaa';return 'externalAccess';}
+function nextReg(after){
+  if(after==='regGdprDpia')return(hasReg('CCPA / CPRA')?'regCcpaSale':hasReg('IL Privacy')?'regIlMachzik':hasReg('HIPAA')?'regHipaaBaa':'externalAccess');
+  if(after==='regCcpaOptout')return(hasReg('IL Privacy')?'regIlMachzik':hasReg('HIPAA')?'regHipaaBaa':'externalAccess');
+  if(after==='regIlTaqana')return(hasReg('HIPAA')?'regHipaaBaa':'externalAccess');
+  return 'externalAccess';
+}
 
 function finishRed(msg){S.step='result';S.score=0;S.redStop=msg;render()}
 
@@ -363,7 +378,7 @@ function renderResult(){
   }
 
   h+=`<div class="toolbar" style="margin-top:14px;gap:6px"><button style="flex:1;background:#eef2ff;color:#3730a3;border:1px solid #c7d2fe;border-radius:8px;padding:10px;font-weight:700;cursor:pointer;font-size:13px" onclick="saveToHistory()">💾 שמור</button><button style="flex:1;background:#eef2ff;color:#3730a3;border:1px solid #c7d2fe;border-radius:8px;padding:10px;font-weight:700;cursor:pointer;font-size:13px" onclick="exportPDF()">📄 PDF</button></div>`;
-  h+=`<button class="act primary" onclick="restart()">✨ בדוק ספק נוסף ◄</button><button class="act backbtn" onclick="goBack()">⏮ אחורה</button>`;
+  h+=`<button class="act primary" onclick="restart()">✨ בדיקת ספק נוסף ◄</button><button class="act backbtn" onclick="goBack()">⏮ אחורה</button>`;
   el('content').innerHTML=h;focus();
 }
 
