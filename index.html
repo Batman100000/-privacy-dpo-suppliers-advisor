@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>יועץ פרטיות לנושא עבודה עם ספקים — v1.8.2.7</title>
+<html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>יועץ פרטיות לנושא עבודה עם ספקים — v1.8.4.0</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
@@ -50,7 +50,7 @@ table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}th,td{b
 <button class="lang-btn active" onclick="setLang('he')">עברית</button>
 <button class="lang-btn" onclick="setLang('en')">English</button>
 </div>
-<span class="version">v1.8.2.7</span>
+<span class="version">v1.8.4.0</span>
 </header>
 <div class="wrap">
 <div class="toolbar" role="toolbar" aria-label="פעולות">
@@ -93,7 +93,7 @@ table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}th,td{b
 </div>
 <div id="historyContent"></div></aside>
 <aside class="drawer" id="treeDrawer" role="dialog" aria-modal="true" aria-labelledby="treeTitle" style="width:min(440px,96vw)"><button class="close" onclick="closeAll()">סגור ✕</button><h2 id="treeTitle">🗺️ מפה</h2><div class="tree" id="treeContent"></div></aside>
-<aside class="drawer" id="versionDrawer" role="dialog" aria-modal="true" aria-labelledby="versionTitle" style="width:min(420px,95vw)"><button class="close" onclick="closeAll()">סגור ✕</button><h2 id="versionTitle">📌 גרסה 1.8.2.7</h2>
+<aside class="drawer" id="versionDrawer" role="dialog" aria-modal="true" aria-labelledby="versionTitle" style="width:min(420px,95vw)"><button class="close" onclick="closeAll()">סגור ✕</button><h2 id="versionTitle">📌 גרסה 1.8.4.0</h2>
 <div style="font-size:13px;line-height:1.6;color:#334155">
 <div style="background:#eef5ff;border-right:4px solid var(--b);border-radius:8px;padding:11px 13px;margin-bottom:12px"><b>שינויים:</b></div>
 <ol style="padding-right:18px;margin:8px 0">
@@ -130,14 +130,15 @@ const DATA_TYPES=['פרטי קשר','משתמשים','עובדים','פיננס�
 const DATA_TYPES_DESC={'פרטי קשר':'דוא"ל, טלפון, כתובת','משתמשים':'משתמשי המערכת/הכלי','עובדים':'עובדי החברה שלכם','פיננסי':'חשבונות, תשלומים','רפואי':'בריאות, אבחנות','ביומטרי':'טביעות אצבע, פנים','ילדים':'קטינים מתחת 18','מזהה ממשלתי':'תעודה זהות, דרכון','אבטחה':'גישה ולוגים','עסקי':'חוזים וסודות'};
 const SUBJECTS=['לקוחות','משתמשים','עובדים','ספקים','מועמדים','ילדים','מטופלים','שותפים'];
 const SENSITIVE=['רפואי','ביומטרי','ילדים','פיננסי','מזהה ממשלתי','אין'];
-const REGIONS=['ישראל','EU / EEA','בריטניה','ארה״ב','קנדה','אחר'];
-const VENDOR_REGIONS=['EU / EEA','UK','US','IL','גלובלי'];
+const REGIONS=['ישראל','EU','ארה״ב','קנדה','אחר'];
+const VENDOR_REGIONS=['EU','US','IL','גלובלי'];
 const REGS=['IL Privacy','GDPR','UK GDPR','CCPA / CPRA','HIPAA','PCI-DSS'];
 const GDPR_BASIS=['Consent','Contract','Legitimate Interest','Legal Obligation'];
 const GDPR_BASIS_DESC={'Consent':'בעל הנתונים הסכים במפורש בכתב וניתן חזרה בקלות','Contract':'עיבוד נדרש להגשת השירות או יצירת הסכם עם בעל הנתונים','Legitimate Interest':'יש אינטרס עסקי משפטי (בדוק כנגד זכויות הנושא)','Legal Obligation':'חיוב חוקי (משטרה, מס, רשות, ביטוח וכו\')'};
 const BIZ=['B2B','B2C','B2B + B2C','B2B2C'];
 
 function hasReg(r){return S.regulations.includes(r)}
+function hasPhysicalData(){return (S.answers.dataTypes?.labels||[]).includes('רפואי')}
 function penalty(n){S.score=Math.max(0,S.score-n)}
 function setLang(lang){S.lang=lang;document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');alert('שפה: '+lang+' (בקרוב)');}
 
@@ -155,7 +156,7 @@ function totalSteps(){
   if(hasReg('GDPR')||hasReg('UK GDPR'))n+=2; // regGdprBasis, regGdprDpia
   if(hasReg('CCPA / CPRA'))n+=2; // regCcpaSale, regCcpaOptout
   if(hasReg('IL Privacy'))n+=2; // regIlMachzik, regIlTaqana
-  if(hasReg('HIPAA'))n+=1; // regHipaaBaa
+  if(hasReg('HIPAA')&&hasPhysicalData())n+=1; // regHipaaBaa
   return n;
 }
 
@@ -230,7 +231,7 @@ function renderNames(){
   announce('מזהה הבדיקה');progress(0);
   el('content').innerHTML=`<h2 class="q" tabindex="-1">בדוק ספק בהיבטי פרטיות</h2>
 <div class="minbanner"><b>🔐 בדיקה זו לא שומרת מידע אישי</b></div>
-<div class="field"><label for="vi">מזהה ספק</label><input id="vi" value="${S.vendor}" maxlength="14" oninput="el('previewBox').innerHTML='<b>'+maskVendor(el('vi').value)+'</b>'"><div class="preview" id="previewBox"><b>${maskVendor(S.vendor)}</b></div></div>
+<div class="field"><label for="vi">שם הספק</label><input id="vi" value="${S.vendor}" maxlength="14" oninput="el('previewBox').innerHTML='<b>'+maskVendor(el('vi').value)+'</b>'"><div class="preview" id="previewBox"><b>${maskVendor(S.vendor)}</b></div></div>
 <div class="field"><label for="ci">Business Owner / איש קשר (אופציונלי)</label><input id="ci" value="${S.customer!=='—'?S.customer:''}" oninput="el('cPreview').textContent=maskPerson(el('ci').value)"><div class="preview">איש קשר: <b id="cPreview">${maskPerson(S.customer)}</b></div></div>
 <button class="act primary" onclick="startQuiz()">התחל ◄</button>`;focus();
 }
@@ -259,7 +260,7 @@ function render(){
   if(step==='sensitive')return renderMulti('sensitive','🚨 מידע רגיש',SENSITIVE,'יש מידע רגיש בקטגוריות אלה?');
   if(step==='dpa')return renderYN('dpa','האם יש כבר 📄 DPA חתום ? או האם מתוכנן להיות חתום ?','<b>חובה לפי כל החוקים.</b> ללא DPA — אין להעביר מידע.');
   if(step==='subs')return renderYN('subs','🔗 האם יש כבר Sub-processors מתועדים ? או האם מתוכנן להעביר רשימה ?','צדדים שלישיים שהספק משתמש בהם (ענן, כלים, שירותים). דרישת GDPR Art.28 וחוק IL.');
-  if(step==='vendorRegion')return renderMulti('vendorRegion','איפה הספק שומר את המידע בפועל? 🏪',VENDOR_REGIONS,'<b>בחר את כל האזורים שבהם הספק שומר פועלית את המידע.</b> אפשר לבחור יותר מאחד — נניח גם ארה״ב וגם אירופה. זה יעזור לבדוק התאמה עם דרישות הלקוחות.');
+  if(step==='vendorRegion')return renderMulti('vendorRegion','אזורי אחסון הספק? 🏪',VENDOR_REGIONS,`<b>בחר את כל האזורים שבהם הספק שומר את המידע בפועל:</b> אפשר לבחור יותר מאחד — נניח גם ארה״ב וגם EU.<br><br><div style="background:#eef5ff;border-right:4px solid #2563eb;border-radius:8px;padding:10px 12px;margin-top:12px;font-size:12px;line-height:1.5;color:#1e40af"><b>🔍 למה שואלים את זה לכל אזור בנפרד?</b><br><br>כל אזור לקוחות עשוי להיות בעל דרישות שונות:<br>• <b>ישראל:</b> יכול לדרוש שמירה בישראל בלבד<br>• <b>EU:</b> דורש GDPR + data residency בEU<br>• <b>ארה״ב:</b> עשוי להיות גמיש יותר<br><br><b>ההבדל הגדול:</b><br><b>Region ספק</b> = עובדה (איפה ספק בפועל שומר)<br><b>דרישת Region</b> = משפט (מה חוזה דורש)<br><br>ההשוואה: אם Region ספק לא תואם דרישה כלשהי, תוצאה אדומה 🔴</div>`);
   
   // Per-group
   if(step.startsWith('grpContract_')){let g=step.split('_')[1];let explain=`<div style="background:#f3f4f6;border-right:4px solid #1f2937;border-radius:8px;padding:13px 14px;margin-bottom:14px;font-size:13px;line-height:1.6;color:#1f2937">
@@ -320,13 +321,13 @@ function nextRegStep(){
   if(hasReg('GDPR')||hasReg('UK GDPR'))return 'regGdprBasis';
   if(hasReg('CCPA / CPRA'))return 'regCcpaSale';
   if(hasReg('IL Privacy'))return 'regIlMachzik';
-  if(hasReg('HIPAA'))return 'regHipaaBaa';
+  if(hasReg('HIPAA')&&hasPhysicalData())return 'regHipaaBaa';
   return 'externalAccess';
 }
 function nextReg(after){
-  if(after==='regGdprDpia')return(hasReg('CCPA / CPRA')?'regCcpaSale':hasReg('IL Privacy')?'regIlMachzik':hasReg('HIPAA')?'regHipaaBaa':'externalAccess');
-  if(after==='regCcpaOptout')return(hasReg('IL Privacy')?'regIlMachzik':hasReg('HIPAA')?'regHipaaBaa':'externalAccess');
-  if(after==='regIlTaqana')return(hasReg('HIPAA')?'regHipaaBaa':'externalAccess');
+  if(after==='regGdprDpia')return(hasReg('CCPA / CPRA')?'regCcpaSale':hasReg('IL Privacy')?'regIlMachzik':(hasReg('HIPAA')&&hasPhysicalData())?'regHipaaBaa':'externalAccess');
+  if(after==='regCcpaOptout')return(hasReg('IL Privacy')?'regIlMachzik':(hasReg('HIPAA')&&hasPhysicalData())?'regHipaaBaa':'externalAccess');
+  if(after==='regIlTaqana')return((hasReg('HIPAA')&&hasPhysicalData())?'regHipaaBaa':'externalAccess');
   return 'externalAccess';
 }
 
@@ -358,27 +359,115 @@ function renderResult(){
   if(S.regulations.length){let regulationNote='';if(S.answers.regulations?.v?.includes('לא יודע')){regulationNote='<div style="background:#fef3c7;border-right:4px solid #d97706;border-radius:8px;padding:9px 11px;margin-bottom:10px;font-size:11px;line-height:1.5;color:#92400e"><b>ℹ️</b> הרגולציות הושלמו בהתאם למיקום אחסון הנתונים שבחרת.</div>';}h+=`<div class="box"><h3>רגולציות</h3>${regulationNote}${S.regulations.map(r=>{let cls=r.includes('GDPR')?'gdpr':r.includes('CCPA')?'ccpa':r.includes('IL')?'il':r.includes('HIPAA')?'hipaa':'gdpr';return `<span class="regbadge ${cls}">${r}</span>`}).join('')}</div>`;}
 
   // GDPR Legal Basis
-  if(S.gdprBasis.length){h+=`<div class="box"><h3>⚖️ בסיסים חוקיים (GDPR Art.6)</h3><div style="display:flex;flex-wrap:wrap;gap:8px">${S.gdprBasis.map(b=>`<div style="background:#f0f9ff;border-right:3px solid #2563eb;border-radius:6px;padding:10px 12px;font-size:13px;color:#1e40af"><b>${b}</b><br><small style="color:#475569">${GDPR_BASIS_DESC[b]||''}</small></div>`).join('')}</div></div>`;}
+  if(S.gdprBasis.length){h+=`<div class="box"><h3>⚖️ בסיסים חוקיים (GDPR Art.6)</h3><div style="background:#f0f9ff;border-right:4px solid #2563eb;border-radius:8px;padding:11px 13px;margin-bottom:12px;font-size:12px;line-height:1.5;color:#1e3a8a"><b>💡 מה זה בסיס חוקי?</b><br>כל עיבוד מידע צריך להיות משפטית חוקי — צריך "סיבה" חוקונית. בחרת ${S.gdprBasis.length} בסיס/ים.<br><br><b>⚠️ אם תחזור בבסיס:</b> עיבוד המידע הופך להיות בלתי חוקי וחשוף לקנס.<br><br><b>דוגמאות SaaS נפוצות:</b><br>• <b>Contract:</b> "נדרש לספק את השירות" (לדוגמה: Gmail צריך את הדוא"ל כדי לתפקד)<br>• <b>Legitimate Interest:</b> "יש לנו אינטרס עסקי" (דוגמה: analytics, security, עדכוני תוכנה)<br>• <b>Consent:</b> "בעל הנתונים הסכים" (רק למיוחדים כמו marketing)<br>• <b>Legal Obligation:</b> "החוק דורש זאת" (דוגמה: tax records, money laundering)<br><br><b>דוגמה עם Sub-processor:</b> אם ספק משתמש בGoogle Analytics (Sub-processor) לטעינות וגם בStripe (Sub-processor) לתשלומים, שני צדדים שלישיים צריכים להיות מכוסים באותו בסיס חוקי כמו הספק. אם בחרת "Contract" אבל Sub-processor דורש "Consent" — זו בעיה!</div><div style="display:flex;flex-wrap:wrap;gap:8px">${S.gdprBasis.map(b=>`<div style="background:#f0f9ff;border-right:3px solid #2563eb;border-radius:6px;padding:10px 12px;font-size:13px;color:#1e40af"><b>${b}</b><br><small style="color:#475569">${GDPR_BASIS_DESC[b]||''}</small></div>`).join('')}</div></div>`;}
 
   // Groups matrix
   if(S.groups.length>0){
     let vr=S.answers.vendorRegion?.v||'—';
     h+=`<div class="box"><h3>📊 קבוצות לקוחות</h3>
     <div style="background:#f0f9ff;border-right:4px solid var(--b);border-radius:8px;padding:11px 13px;margin-bottom:12px;font-size:12px;line-height:1.5;color:#1e3a8a">
-      <b>הסבר:</b> כל קבוצה מייצגת אזור לקוחות שונה. הטבלה בודקת האם Region שבחר הספק תואם את דרישות כל קבוצת לקוחות:
-      <br><br>
-      • <b>אין התאמה:</b> דרישת לקוחות לא מתקיימת (ישראל דורשת שמירה בישראל, אבל ספק בEU)
-      <br>• <b>אין דרישה:</b> לא הוגדרה דרישת Region ברורה, ולכן Region הספק מקובל
-      <br>• <b>התאמה:</b> Region הספק תואם את דרישות הקבוצה (EU דורש EU, ספק בEU)
+      <b>🔄 ההשוואה:</b> עבור כל קבוצת לקוחות, בדקנו האם אזור האחסון שבחר הספק תואם את מה שדורש החוזה.<br><br>
+      <b>דוגמה:</b> ספק שומר בEU ↔ חוזה דורש EU = ✅ התאמה<br>
+      <b>בעיה:</b> ספק שומר בUS ↔ חוזה דורש ישראל = ❌ אין התאמה (מרווח משפטי!)<br>
     </div>`;
-    h+=`<div class="matrix-mobile">`;
-    S.groups.forEach(g=>{let gr=S.groupResults[g]||{color:'gray',note:'—'};let icon=gr.color==='green'?'✅':gr.color==='yellow'?'⚠️':gr.color==='orange'?'🟠':'❌';let contractAns=S.answers['grpContract_'+g]?.v||'—';let privReq=gr.color==='green'?'✅ Region תואם':gr.color==='orange'?'🟠 בדוק Sub-processors':'❌ דרוש DPA';h+=`<div class="card-group"><h4>${icon} ${g}</h4><div class="grp-row"><span class="grp-label">דרישה חוזית:</span><span class="grp-val">${contractAns}</span></div><div class="grp-row"><span class="grp-label">מתקיים?</span><span class="grp-val">${gr.note}</span></div><div class="grp-row"><span class="grp-label">דרישות פרטיות:</span><span class="grp-val">${privReq}</span></div></div>`;});
+    
+    let passCount=S.groups.filter(g=>(S.groupResults[g]||{}).color==='green').length;
+    let failCount=S.groups.filter(g=>(S.groupResults[g]||{}).color==='red').length;
+    let riskCount=S.groups.filter(g=>(S.groupResults[g]||{}).color==='orange').length;
+    
+    h+=`<div style="background:#f8fafc;border:1px solid var(--l);border-radius:8px;padding:12px;margin-bottom:14px;font-size:12px;line-height:1.6">
+    <b>📈 תוצאה:</b> `;
+    if(passCount===S.groups.length){
+      h+=`<b style="color:#166534">✅ כל קבוצות הלקוחות בהתאמה מלאה</b><br><br>✔️ <b>Region הספק תואם לדרישות כל הלקוחות.</b> אין סיכון משפטי. אתה יכול להמשיך עם ההטמעה. בדוק:<br>• הספק לא משתמש ב-Sub-processors מאזורים אחרים<br>• DPA (אם קיים) מכסה את Region הנוכחי`;
+    }else if(failCount>0){
+      h+=`<b style="color:#9f1239">❌ ${failCount} קבוצות בסיכון גבוה (מרווח משפטי!)</b><br><br>⚠️ <b>מה זה "מרווח משפטי"?</b><br><br><b>דוגמה:</b> חוזה עם לקוח בישראל קובע "המידע חייב להישמר בישראל בלבד" אבל הספק שומר את הנתונים בEU. זה בעיה חמורה!<br><br><b>דוגמה עם Sub-Processor:</b> הספק שומר בישראל (✅ טוב) אבל משתמש ב-Sub-processor לגיבוי בAWS בUS (❌ בעיה!) — הלקוח לא ידע על זה.<br><br><b>כיצד לתקן:</b><br>• <b>DPA חתום:</b> מגדיר היכן ניתן לשמור ולהעביר מידע<br>• <b>Addendum:</b> (especially SCCs) עבור העברות לEU/בחו"ל<br>• <b>Sub-processor approval:</b> ודא שכל Sub-processor מאושר בחוזה<br>• <b>Data Transfer Agreement:</b> אם יש העברה בחו"ל`;
+    }else{
+      h+=`<b style="color:#d97706">🟠 ${riskCount} קבוצות בסיכון חלקי</b><br><br>⚠️ <b>סיכון חלקי = בעיה שדורשת בדיקה</b><br><br><b>דוגמאות:</b><br>• Region הספק חלקי (שומר בEU וUS, דרישה רק EU)<br>• אין דרישה חוזית ברורה (Region לא מוגדר בחוזה)<br>• Sub-processors אינם מתועדים<br><br><b>בדוק:</b><br>• רשימה מלאה של Sub-processors (כל צד שלישי שהספק משתמש בו)<br>• DPA: האם הוא מכסה Sub-processors?<br>• האם יש הסכמה מהלקוח על השימוש בצדדים שלישיים?`;
+    }
+    h+=`<br><br><b>📊 פירוט:</b><br>• סך הקבוצות: <b>${S.groups.length}</b><br>`;
+    h+=`• ✅ בהתאמה מלאה: <b style="color:#166534">${passCount}</b><br>`;
+    if(riskCount>0) h+=`• 🟠 בסיכון חלקי: <b style="color:#d97706">${riskCount}</b><br>`;
+    if(failCount>0) h+=`• ❌ בסיכון גבוה: <b style="color:#9f1239">${failCount}</b><br>`;
     h+=`</div>`;
-    h+=`<div class="matrix-desktop"><table><tr><th>קבוצה</th><th>דרישה חוזית</th><th>מתקיים?</th><th>דרישות פרטיות</th></tr>${S.groups.map(g=>{let gr=S.groupResults[g]||{color:'gray',note:'—'};let contractAns=S.answers['grpContract_'+g]?.v||'—';let privReq=gr.color==='green'?'✅ Region תואם':gr.color==='orange'?'🟠 בדוק Sub-processors':'❌ דרוש DPA';return `<tr><td><b>${g}</b></td><td>${contractAns}</td><td>${gr.note}</td><td>${privReq}</td></tr>`}).join('')}</table></div>`;
+    
+    h+=`<div class="box"><h3>📋 קבוצות לקוחות - ניתוח מפורט</h3><div style="background:#f8fafc;border-right:4px solid #2563eb;border-radius:8px;padding:11px 13px;margin-bottom:14px;font-size:12px;line-height:1.6;color:#1e3a8a"><b>💡 מה בודקים כאן?</b><br>כל קבוצה מייצגת <b>אזור לקוחות שונה</b>. הבדיקה משווה:<br><br><b>דרישת הלקוחות:</b> "איזה Region מותר / נדרש?" (ישראל, EU, USA, וכו')<br><b>מציאות - Region הספק:</b> "איפה הספק בפועל שומר את הנתונים?" (Israel, EU, US, Global)<br><br><b>3 תוצאות אפשריות:</b><br>✅ <b>התאמה:</b> דרישה תואמת מציאות (לקוח דורש EU, ספק בEU)<br>❌ <b>אין התאמה:</b> דרישה לא מתקיימת (לקוח דורש ישראל, ספק בEU)<br>🟠 <b>בלא דרישה ברורה:</b> לא הוגדרה דרישה, Region הספק מקובל</div></div>`;
+    
+    h+=`<div class="box"><h4 style="margin-top:0">🔍 סיכום קבוצות:</h4><div style="display:flex;flex-direction:column;gap:10px">`;
+    S.groups.forEach(g=>{
+      let gr=S.groupResults[g]||{color:'gray',note:'—'};
+      let icon=gr.color==='green'?'✅':gr.color==='red'?'❌':'🟠';
+      let contractAns=S.answers['grpContract_'+g]?.v||'—';
+      let vendorRegion=S.answers.vendorRegion?.v||'לא הוגדר';
+      let borderColor=gr.color==='green'?'#16a34a':gr.color==='red'?'#dc2626':'#f59e0b';
+      h+=`<div style="background:#ffffff;border-left:4px solid ${borderColor};border-radius:6px;padding:10px 12px;font-size:12px;line-height:1.6;color:#333"><b>${icon} קבוצה: ${g}</b><br><span style="color:#1e40af"><b>דרישת לקוחות:</b> ${contractAns}</span><br><span style="color:#7c2d12"><b>ספק שומר ב:</b> ${vendorRegion}</span><br><b style="color:${borderColor}">תוצאה:</b> <span style="color:${borderColor}">${gr.note}</span></div>`;
+    });
+    h+=`</div></div>`;
+    S.groups.forEach(g=>{
+      let gr=S.groupResults[g]||{color:'gray',note:'—'};
+      let icon=gr.color==='green'?'✅':gr.color==='red'?'❌':'🟠';
+      let contractAns=S.answers['grpContract_'+g]?.v||'—';
+      let dpaExists=S.answers.dpa?.v;
+      let privReq='—';
+      let explanation='';
+      if(gr.color==='green'){
+        privReq='✅ התאמה';
+        explanation='✅ Region הספק תואם לדרישת החוזה. וודא שאין Sub-processors באזורים אחרים (דוגמה: ספק בEU אבל משתמש בAWS בUS לגיבוי).';
+      }
+      else if(gr.color==='red'){
+        if(dpaExists&&dpaExists.includes('כן')){
+          privReq='📋 יש DPA - בדוק';
+          explanation=`<b>מרווח משפטי קיים:</b> חוזה דורש ${g}, ספק ב${S.answers.vendorRegion?.v||'Region אחר'}. יש DPA אבל:<br>• וודא שהוא מכסה את ה-Region הנוכחי<br>• בדוק שה-DPA מכסה Sub-processors (דוגמה: אם ספק בUS משתמש בGoogle Cloud בEU, צריך לאישור)`;
+        }
+        else if(dpaExists&&dpaExists.includes('מתוכנן')){
+          privReq='📋 DPA מתוכנן';
+          explanation=`<b>מרווח משפטי + DPA בתהליך:</b> חוזה דורש ${g}, ספק ב${S.answers.vendorRegion?.v||'Region אחר'}. DPA יוחתם בקרוב - וודא שיכסה:<br>• את ה-Region המסוים<br>• את כל ה-Sub-processors (צדדים שלישיים שהספק משתמש בהם)`;
+        }
+        else{
+          privReq='❌ חסר DPA - סיכון!';
+          explanation=`<b style="color:#9f1239">⚠️ בעיה חמורה (דורש פעולה מידית!):</b> חוזה דורש שמירה ב${g}, ספק שומר ב${S.answers.vendorRegion?.v||'Region אחר'}. <b>אין DPA!</b><br><br><b>מה זה פירוש?</b> העברת מידע בחו"ל בלי הסכמה = בעיה משפטית<br><br><b>דוגמה בעיתית:</b> חוזה "שמור בישראל", ספק שומר בAWS EU ללא DPA = בעיה GDPR + חוק ישראלי<br><br><b>פתרון:</b> חתום DPA עם SCCs (Standard Contractual Clauses) או שנה את Region האחסון`;
+        }
+      }
+      else if(gr.color==='orange'){
+        privReq='🟠 בדוק פרטים';
+        explanation=`<b>סיכון חלקי (בדיקה נדרשת):</b><br>• Region הספק חלקי (שומר במקומות מרובים)<br>• דרישה לא ברורה בחוזה<br><br><b>בדוק:</b><br>• רשימת Sub-processors מלאה (Stripe, Firebase, GitHub וכו')<br>• האם כל Sub-processor מאושר בחוזה?<br>• האם DPA מכסה את כל Sub-processors?`;
+      }
+      h+=`<div class="card-group"><h4>${icon} ${g}</h4><div class="grp-row"><span class="grp-label">דורש:</span><span class="grp-val">${contractAns}</span></div><div class="grp-row"><span class="grp-label">מצב:</span><span class="grp-val">${gr.note}</span></div><div class="grp-row"><span class="grp-label">פעולה:</span><span class="grp-val">${privReq}</span></div>${explanation?`<div class="grp-row" style="margin-top:8px;padding:8px;background:#f0f0f0;border-radius:6px;font-size:11px;color:#333"><b>💡 הסבר:</b> ${explanation}</div>`:''}</div>`;
+    });
+    h+=`</div>`;
+    h+=`<div class="matrix-desktop"><table style="font-size:12px"><tr><th>קבוצה</th><th>דורש</th><th>מצב</th><th>פעולה נדרשת</th><th>הסבר</th></tr>${S.groups.map(g=>{
+      let gr=S.groupResults[g]||{color:'gray',note:'—'};
+      let contractAns=S.answers['grpContract_'+g]?.v||'—';
+      let dpaExists=S.answers.dpa?.v;
+      let privReq='—';
+      let explanation='—';
+      if(gr.color==='green'){
+        privReq='✅ התאמה';
+        explanation='✅ התאמה מלאה - בדוק Sub-processors';
+      }
+      else if(gr.color==='red'){
+        if(dpaExists&&dpaExists.includes('כן')){
+          privReq='📋 יש DPA - בדוק';
+          explanation=`DPA קיים - בדוק כיסוי Sub-processors`;
+        }
+        else if(dpaExists&&dpaExists.includes('מתוכנן')){
+          privReq='📋 DPA מתוכנן';
+          explanation=`DPA בדרך - חיוני לסיום ולכיסוי`;
+        }
+        else{
+          privReq='❌ חסר DPA - סיכון!';
+          explanation=`❌ חסר DPA - סיכון משפטי חמור!`;
+        }
+      }
+      else if(gr.color==='orange'){
+        privReq='🟠 בדוק פרטים';
+        explanation='בדוק Sub-processors + DPA coverage';
+      }
+      return `<tr><td><b>${g}</b></td><td>${contractAns}</td><td>${gr.note}</td><td>${privReq}</td><td>${explanation}</td></tr>`
+    }).join('')}</table></div>`;
     h+=`</div>`;
   }
 
-  h+=`<div class="toolbar" style="margin-top:14px;gap:6px"><button style="flex:1;background:#eef2ff;color:#3730a3;border:1px solid #c7d2fe;border-radius:8px;padding:10px;font-weight:700;cursor:pointer;font-size:13px" onclick="saveToHistory()">💾 שמור</button><button style="flex:1;background:#eef2ff;color:#3730a3;border:1px solid #c7d2fe;border-radius:8px;padding:10px;font-weight:700;cursor:pointer;font-size:13px" onclick="exportPDF()">📄 PDF</button></div>`;
+  h+=`<div class="toolbar" style="margin-top:14px;gap:6px"><button style="flex:1;background:#eef2ff;color:#3730a3;border:1px solid #c7d2fe;border-radius:8px;padding:10px;font-weight:700;cursor:pointer;font-size:13px" onclick="saveToHistory()">💾 שמור</button><button style="flex:1;background:#eef2ff;color:#3730a3;border:1px solid #c7d2fe;border-radius:8px;padding:10px;font-weight:700;cursor:pointer;font-size:13px" onclick="exportPDF()">📄 PDF</button><button style="flex:1;background:#f3e8ff;color:#6d28d9;border:1px solid #d8b4fe;border-radius:8px;padding:10px;font-weight:700;cursor:pointer;font-size:13px" onclick="generateFinalReport()">📋 דוח סופי</button></div>`;
   h+=`<button class="act primary" onclick="restart()">✨ בדיקת ספק נוסף ◄</button><button class="act backbtn" onclick="goBack()">⏮ אחורה</button>`;
   el('content').innerHTML=h;focus();
 }
@@ -393,11 +482,195 @@ function maskExistingHistory(){let l=loadHistory();l.forEach(x=>x.vendor=maskVen
 function exportHistoryFile(){let b=new Blob([JSON.stringify(loadHistory(),null,2)],{type:'application/json'});let u=URL.createObjectURL(b);let a=document.createElement('a');a.href=u;a.download='privacy_history.json';a.click();URL.revokeObjectURL(u)}
 function importHistoryFile(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=ev=>{try{saveHistoryList(JSON.parse(ev.target.result).concat(loadHistory()));renderHistory();alert('יובא ✓')}catch(err){alert('שגיאה')}};r.readAsText(f)}
 
+/* FINAL REPORT */
+function generateFinalReport(){
+  let vendorName=S.answers.names?.v||'[שם ספק]';
+  let owner=S.answers.bizModel?.v||'[לא הוגדר]';
+  let score=S.score||0;
+  let status=S.status||'[סטטוס]';
+  let stopReason=S.stopReason||'אין';
+  let vendorRegion=S.answers.vendorRegion?.v||'[לא הוגדר]';
+  let dpa=S.answers.dpa?.v||'[לא הוגדר]';
+  let regulations=(S.regulations||[]).join(', ')||'אין';
+  
+  let groupsAnalysis='';
+  S.groups.forEach(g=>{
+    let contractAns=S.answers['grpContract_'+g]?.v||'—';
+    let gr=S.groupResults[g]||{note:'—'};
+    let status_text=gr.note||'—';
+    groupsAnalysis+=`<tr><td><b>${g}</b></td><td>${contractAns}</td><td>${status_text}</td><td>בדוק</td></tr>`;
+  });
+  
+  let gdprBases=(S.gdprBasis||[]).join(', ')||'—';
+  let dpaStatus=dpa.includes('כן')?'✅ חתום':dpa.includes('מתוכנן')?'🟡 בתהליך':'❌ לא קיים';
+  let subs=S.answers.subs?.v||'[לא הוגדר]';
+  
+  let html=`
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+  <meta charset="UTF-8">
+  <title>דוח סופי - ${vendorName}</title>
+  <style>
+    body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f5f5f5;padding:20px;direction:rtl;color:#333}
+    .container{max-width:1000px;margin:0 auto;background:white;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.1);padding:30px}
+    h1{border-bottom:3px solid #2563eb;padding-bottom:10px;color:#1e40af}
+    h2{color:#2563eb;margin-top:30px;border-right:4px solid #2563eb;padding-right:10px}
+    h3{color:#1e40af;margin-top:20px}
+    .section{background:#f9fafb;border-right:4px solid #2563eb;border-radius:6px;padding:15px;margin:15px 0}
+    table{width:100%;border-collapse:collapse;margin:15px 0}
+    th,td{padding:12px;text-align:right;border-bottom:1px solid #e5e7eb}
+    th{background:#e0e7ff;color:#1e40af;font-weight:bold}
+    tr:hover{background:#f3f4f6}
+    .status-badge{display:inline-block;padding:6px 12px;border-radius:4px;font-weight:bold;color:white}
+    .status-green{background:#16a34a}
+    .status-yellow{background:#eab308}
+    .status-orange{background:#f97316}
+    .status-red{background:#dc2626}
+    .footer{margin-top:40px;padding-top:20px;border-top:1px solid #e5e7eb;font-size:12px;color:#666;text-align:center}
+    .action-table{width:100%;border-collapse:collapse}
+    .action-table tr{border-bottom:1px solid #ddd}
+    .action-table th,.action-table td{padding:12px;text-align:right;border:1px solid #e5e7eb}
+    .action-table th{background:#fef3c7;color:#92400e}
+    .priority-high{color:#dc2626;font-weight:bold}
+    .priority-medium{color:#f97316;font-weight:bold}
+    .priority-low{color:#059669;font-weight:bold}
+    .alert-box{background:#fef2f2;border-right:4px solid #dc2626;border-radius:6px;padding:15px;margin:15px 0;color:#7f1d1d}
+    .success-box{background:#f0fdf4;border-right:4px solid #16a34a;border-radius:6px;padding:15px;margin:15px 0;color:#15803d}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📋 דוח מסקנות והנחיות פרטיות ואבטחה</h1>
+    
+    <div class="section">
+      <h3>תעודת זהות לבדיקה</h3>
+      <table>
+        <tr><td><b>שם הספק:</b></td><td>${vendorName}</td></tr>
+        <tr><td><b>Business Owner:</b></td><td>${owner}</td></tr>
+        <tr><td><b>ציון משוקלל:</b></td><td>${score} / 100</td></tr>
+        <tr><td><b>סטטוס ברמזור:</b></td><td><span class="status-badge status-${score>=80?'green':score>=60?'yellow':score>=40?'orange':'red'}">${status}</span></td></tr>
+        <tr><td><b>סיבת עצירה (אם יש):</b></td><td>${stopReason}</td></tr>
+      </table>
+    </div>
+
+    <div class="section">
+      <h2>תמצית מנהלים (Executive Summary)</h2>
+      <p><b>ספק:</b> ${vendorName}</p>
+      <p><b>הערכה כוללת:</b> ניקוד ${score}/100 - סטטוס: ${status}</p>
+      <p><b>סיכונים מרכזיים:</b></p>
+      <ul>
+        <li><b>תושבות מידע:</b> ספק שומר ב- ${vendorRegion}</li>
+        <li><b>DPA:</b> ${dpaStatus}</li>
+        <li><b>Sub-processors:</b> ${subs}</li>
+        <li><b>רגולציות:</b> ${regulations}</li>
+      </ul>
+      ${score<60?'<div class="alert-box"><b>⚠️ הספק אינו עומד בדרישות בטיחות וסטנדרטים רגולטוריים</b> - נדרשת בדיקה מעמיקה או כיימון.</div>':'<div class="success-box"><b>✅ הספק עומד בדרישות בטיחות בסיסיות</b> - אך חובה לבדוק פרטים.</div>'}
+    </div>
+
+    <div class="section">
+      <h2>מטריצת תושבות מידע וקבוצות לקוחות</h2>
+      <p><b>אזורי אחסון הספק:</b> ${vendorRegion}</p>
+      <p><b>בסיסים חוקיים (GDPR Art.6):</b> ${gdprBases}</p>
+      <h3>ניתוח קבוצות לקוחות:</h3>
+      <table>
+        <tr><th>קבוצה</th><th>דרישת לקוחות</th><th>מצב בפועל</th><th>פעולה</th></tr>
+        ${groupsAnalysis}
+      </table>
+    </div>
+
+    <div class="section">
+      <h2>👥 זוויות ניתוח לפי בעלי תפקידים</h2>
+      
+      <h3>🔒 לאנשי אבטחת מידע (CISO / InfoSec)</h3>
+      <ul>
+        <li><b>סיכוני שרשרת אספקה:</b> בדיקת Sub-processors, גישה חוצת אזורים</li>
+        <li><b>בקרות נדרשות:</b> הצפנה, מחיקה, ניטור, הרשאות</li>
+        <li><b>גיבויים ותמיכה:</b> וודא שלא עובדים מ-Region לא מאושר</li>
+      </ul>
+
+      <h3>⚖️ לאנשי פרטיות ומשפט (DPO / Legal)</h3>
+      <ul>
+        <li><b>חשיפה משפטית:</b> בדוק DPA, SCCs, תקנה 15 (IL), DPIA</li>
+        <li><b>העברות בינלאומיות:</b> וודא הסכמת לקוחות להעברת מידע</li>
+        <li><b>מרווח משפטי:</b> אם קיים פער בין דרישה לבפועל — דורש סגירה מידית</li>
+      </ul>
+
+      <h3>💼 למנהל עסקי / מוצר (Business Owner)</h3>
+      <ul>
+        <li><b>השפעה עסקית:</b> הפרת הסכם לקוחות, קנסות רגולטוריים, עיכובי עסקאות</li>
+        <li><b>דרך קדימה:</b> תשומת לב לדרישות חתימת DPA, עדכון נספח Sub-processors</li>
+      </ul>
+    </div>
+
+    <div class="section">
+      <h2>תוכנית עבודה וצעדים לתיקון</h2>
+      <table class="action-table">
+        <tr>
+          <th>#</th>
+          <th>פעולה נדרשת</th>
+          <th>בעל תפקיד</th>
+          <th>עדיפות</th>
+          <th>תנאי לחתימה</th>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>חתימה על DPA או עדכון כולל SCCs (מסמך הסכם עיבוד מידע)</td>
+          <td>Legal / DPO</td>
+          <td><span class="priority-high">🔴 גבוהה</span></td>
+          <td>כן</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>מיפוי שרתי גיבוי, שירותי תמיכה וכל Sub-processor טכני</td>
+          <td>InfoSec / CISO</td>
+          <td><span class="priority-high">🔴 גבוהה</span></td>
+          <td>כן</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td>עדכון נספח תושבות מידע ודרישות Region מול לקוחות</td>
+          <td>Business Owner</td>
+          <td><span class="priority-medium">🟡 בינונית</span></td>
+          <td>לא (30 יום)</td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>בדיקה: האם DPA מכסה את כל Sub-processors הטכניים</td>
+          <td>DPO / CISO</td>
+          <td><span class="priority-high">🔴 גבוהה</span></td>
+          <td>כן</td>
+        </tr>
+        <tr>
+          <td>5</td>
+          <td>הדרכה: הנהלת הספק על בקרות פרטיות ותקנה 15 (אם בישראל)</td>
+          <td>DPO / Legal</td>
+          <td><span class="priority-medium">🟡 בינונית</span></td>
+          <td>לא (במהלך 60 יום)</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="footer">
+      <p>דוח זה נוצר על בסיס תוצאות שאלון בדיקת הפרטיות והאבטחה v1.8.3.5</p>
+      <p>תאריך הדוח: ${new Date().toLocaleDateString('he-IL')}</p>
+      <p><small>מיועד לשימוש פנימי בלבד | סיווג: חסוי עסקי</small></p>
+    </div>
+  </div>
+</body>
+</html>
+  `;
+  
+  let w=window.open();
+  w.document.write(html);
+  w.document.close();
+}
+
 /* EXPORT */
 async function exportPDF(){alert('הייצוא זמין בגרסה בעלת API הקצאה מלאה. כרגע: צילום מסך + שמירה.')}
 
 /* TREE */
-function renderTree(){let nodes=[{l:'1. מזהה ספק',id:'names'},{l:'2. מודל עסקי',id:'bizModel'},{l:'3. רגולציות',id:'regulations'},{l:'4. קבוצות',id:'groups'},{l:'5. מידע',id:'dataTypes'},{l:'6. נושאים',id:'subjects'},{l:'7. רגיש',id:'sensitive'},{l:'8. DPA',id:'dpa'},{l:'9. Sub-proc',id:'subs'},{l:'10. Region ספק',id:'vendorRegion'},{l:'11–12. לכל קבוצה',id:'grpContract'},{l:'13–16. רגולציות',id:'regGdpr'},{l:'17–19. גישה + כלים',id:'externalAccess'},{l:'20. תוצאה',id:'result'}];let done=new Set(Object.keys(S.answers));el('treeContent').innerHTML=nodes.map(n=>{let cls='tnode'+(done.has(n.id)||S.step===n.id?' current':'')+(S.step==='result'&&n.id==='result'?' done':'');return `<div class="${cls}">${n.l}</div>`}).join('')}
+function renderTree(){let nodes=[{l:'1. שם הספק',id:'names'},{l:'2. מודל עסקי',id:'bizModel'},{l:'3. רגולציות',id:'regulations'},{l:'4. קבוצות',id:'groups'},{l:'5. מידע',id:'dataTypes'},{l:'6. נושאים',id:'subjects'},{l:'7. רגיש',id:'sensitive'},{l:'8. DPA',id:'dpa'},{l:'9. Sub-proc',id:'subs'},{l:'10. Region ספק',id:'vendorRegion'},{l:'11–12. לכל קבוצה',id:'grpContract'},{l:'13–16. רגולציות',id:'regGdpr'},{l:'17–19. גישה + כלים',id:'externalAccess'},{l:'20. תוצאה',id:'result'}];let done=new Set(Object.keys(S.answers));el('treeContent').innerHTML=nodes.map(n=>{let cls='tnode'+(done.has(n.id)||S.step===n.id?' current':'')+(S.step==='result'&&n.id==='result'?' done':'');return `<div class="${cls}">${n.l}</div>`}).join('')}
 
 /* PANELS */
 function openInfo(){closeAll();el('infoDrawer').classList.add('open');el('shade').classList.add('show')}
