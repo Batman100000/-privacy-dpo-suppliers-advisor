@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>יועץ פרטיות לנושא עבודה עם ספקים — v1.8.2.4</title>
+<html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>יועץ פרטיות לנושא עבודה עם ספקים — v1.8.2.5</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
@@ -50,7 +50,7 @@ table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}th,td{b
 <button class="lang-btn active" onclick="setLang('he')">עברית</button>
 <button class="lang-btn" onclick="setLang('en')">English</button>
 </div>
-<span class="version">v1.8.2.4</span>
+<span class="version">v1.8.2.5</span>
 </header>
 <div class="wrap">
 <div class="toolbar" role="toolbar" aria-label="פעולות">
@@ -93,7 +93,7 @@ table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}th,td{b
 </div>
 <div id="historyContent"></div></aside>
 <aside class="drawer" id="treeDrawer" role="dialog" aria-modal="true" aria-labelledby="treeTitle" style="width:min(440px,96vw)"><button class="close" onclick="closeAll()">סגור ✕</button><h2 id="treeTitle">🗺️ מפה</h2><div class="tree" id="treeContent"></div></aside>
-<aside class="drawer" id="versionDrawer" role="dialog" aria-modal="true" aria-labelledby="versionTitle" style="width:min(420px,95vw)"><button class="close" onclick="closeAll()">סגור ✕</button><h2 id="versionTitle">📌 גרסה 1.8.2.4</h2>
+<aside class="drawer" id="versionDrawer" role="dialog" aria-modal="true" aria-labelledby="versionTitle" style="width:min(420px,95vw)"><button class="close" onclick="closeAll()">סגור ✕</button><h2 id="versionTitle">📌 גרסה 1.8.2.5</h2>
 <div style="font-size:13px;line-height:1.6;color:#334155">
 <div style="background:#eef5ff;border-right:4px solid var(--b);border-radius:8px;padding:11px 13px;margin-bottom:12px"><b>שינויים:</b></div>
 <ol style="padding-right:18px;margin:8px 0">
@@ -277,7 +277,7 @@ function render(){
   if(step.startsWith('grpMatch_')){let g=step.split('_')[1];let vr=S.answers.vendorRegion?.v||'?';return renderSingle('grpMatch_'+g,'<span class="grpbadge">'+g+'</span> Region ספק ('+vr+') תואם?',['✅ כן','🟠 חלקי','❌ לא'],'בדוק מול דרישת החוזה.');}
 
   // Regulatory
-  if(step==='regGdprBasis')return renderMulti('regGdprBasis','<span class="regbadge gdpr">GDPR</span> איזה סיבה חוקית הספק יכול לעבד את המידע? (Art.6)',GDPR_BASIS,'<b>בחר את הסיבה (או הסיבות) שהחוזה מסתמך עליה:</b> חברה יכולה להיות תלויה ביותר מבסיס חוקי אחד.<br><br><div style="background:#fef3c7;border-right:4px solid #d97706;border-radius:8px;padding:10px 12px;margin-top:12px;font-size:12px;line-height:1.5;color:#92400e"><b>💡 בחברות SaaS בדרך כלל:</b><br>• <b>Contract</b> — תמיד (החוזה דורש עיבוד)<br>• <b>Legitimate Interest</b> — כמעט תמיד (analytics, security)<br>• <b>Consent</b> — רק להודעות/marketing<br>• <b>Legal Obligation</b> — נדיר (רק עבור חוקים ספציפיים)</div>',GDPR_BASIS_DESC);
+  if(step==='regGdprBasis')return renderMulti('regGdprBasis','<span class="regbadge gdpr">GDPR</span> בסיס חוקי (Art.6)?',GDPR_BASIS,'<b>בחר את הסיבה (או הסיבות) שהחוזה מסתמך עליה:</b> חברה יכולה להיות תלויה ביותר מבסיס חוקי אחד.<br><br><div style="background:#fef3c7;border-right:4px solid #d97706;border-radius:8px;padding:10px 12px;margin-top:12px;font-size:12px;line-height:1.5;color:#92400e"><b>💡 בחברות SaaS בדרך כלל:</b><br>• <b>Contract</b> — תמיד (החוזה דורש עיבוד)<br>• <b>Legitimate Interest</b> — כמעט תמיד (analytics, security)<br>• <b>Consent</b> — רק להודעות/marketing<br>• <b>Legal Obligation</b> — נדיר (רק עבור חוקים ספציפיים)</div>',GDPR_BASIS_DESC);
   if(step==='regGdprDpia')return renderYN('regGdprDpia','<span class="regbadge gdpr">GDPR</span> האם יהיה DPIA במסגרת החוזה?','<b>Data Impact Assessment</b> נדרש כשיש:<br>• פרופיילינג או עדכון מידע אוטומטי<br>• מעקב שיטתי או בקנה מידה גדול<br>• החלטות אוטומטיות שמשפיעות על זכויות האדם<br><br>שאלה: האם הספק התחייב לביצוע DPIA או עבודה משותפת בו?');
   if(step==='regCcpaSale')return renderYN('regCcpaSale','<span class="regbadge ccpa">CCPA</span> Sale/Share of PI?','האם הספק מוכר או משתף מידע תמורת תועלת?');
   if(step==='regCcpaOptout')return renderYN('regCcpaOptout','<span class="regbadge ccpa">CCPA</span> Opt-out?','יש כפתור "Do Not Sell/Share"?');
