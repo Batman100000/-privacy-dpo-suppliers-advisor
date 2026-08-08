@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="he" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>יועץ פרטיות לנושא עבודה עם ספקים — v1.8.2</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{--n:#10233f;--b:#1d4ed8;--g:#15803d;--r:#b91c1c;--y:#a16207;--o:#c2410c;--l:#dbe3ef;--bg:#f4f7fb}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:#172033;font:15px/1.5 -apple-system,BlinkMacSystemFont,'Segoe UI',Arial,'Noto Sans Hebrew',sans-serif;-webkit-font-smoothing:antialiased}
+a,button,input,select,[tabindex]{outline-offset:2px}a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,[tabindex]:focus-visible{outline:3px solid #f59e0b;outline-offset:2px}
+.skip-link{position:absolute;right:-999px;top:0;background:#111;color:#fff;padding:10px 16px;border-radius:0 0 10px 10px;z-index:50}.skip-link:focus{right:10px}
+header{background:linear-gradient(135deg,var(--n),var(--b));color:#fff;padding:20px 16px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.header-content{flex:1}h1{margin:0;font-size:clamp(18px,5vw,26px);font-weight:700;letter-spacing:-0.5px}header p{margin:4px 0 0;opacity:.85;font-size:13px}
+.lang-toggle{display:flex;gap:6px;align-items:center;flex-shrink:0}.lang-btn{background:#ffffff22;border:1px solid #ffffff44;color:#fff;padding:8px 14px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;white-space:nowrap}.lang-btn.active{background:#fff;color:var(--b);font-weight:700}.lang-btn:hover{background:#ffffff33}.version{background:#ffffff22;border:1px solid #ffffff44;border-radius:16px;padding:4px 10px;font-size:11px;font-weight:600;white-space:nowrap;margin-left:12px}
+.wrap{max-width:1000px;margin:16px auto;padding:0 12px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}.toolbar button{background:#fff;border:1px solid var(--l);color:var(--n);border-radius:8px;padding:8px 12px;font-weight:600;cursor:pointer;font-size:12px;transition:.2s}.toolbar button:hover{background:#f1f5fb;transform:translateY(-1px)}
+.grid{display:grid;grid-template-columns:1fr;gap:14px}@media(min-width:768px){.grid{grid-template-columns:minmax(0,1fr) 260px}}
+.card,.side,.notes{background:#fff;border:1px solid var(--l);border-radius:12px;box-shadow:0 2px 8px #19345b08}
+.card{padding:20px}.side{padding:16px;height:max-content;position:sticky;top:10px}.step{color:#64748b;font-size:13px;font-weight:500}.bar{height:6px;background:#e8eef7;border-radius:6px;margin:6px 0 3px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--b),#2563eb);transition:.3s}.pct{text-align:left;color:#64748b;font-size:12px;margin-bottom:14px;font-weight:600}
+.q{font-size:18px;line-height:1.3;margin:0 0 6px;font-weight:600;color:var(--n)}.hint{color:#536176;margin:0 0 14px;font-size:14px}
+.explain{background:#eef5ff;border-right:4px solid var(--b);border-radius:8px;padding:12px 14px;margin:0 0 16px;color:#334155;font-size:13.5px;line-height:1.5}.explain b{color:#1747ad;font-weight:600}
+.opts{display:grid;grid-template-columns:1fr;gap:8px;list-style:none;padding:0;margin:0}@media(min-width:600px){.opts{grid-template-columns:repeat(2,1fr)}}.opt{display:flex;gap:10px;align-items:flex-start;min-height:48px;padding:12px;border:1.5px solid var(--l);border-radius:10px;cursor:pointer;background:#fafcff;transition:.15s}.opt:hover{border-color:var(--b);background:#f0f5ff}.opt input{width:20px;height:20px;margin-top:2px;accent-color:var(--b);cursor:pointer}.opt span{flex:1;font-size:14px;line-height:1.4}
+.answers{display:grid;grid-template-columns:1fr;gap:12px}.answers.two{grid-template-columns:1fr 1fr}@media(max-width:480px){.answers.two{grid-template-columns:1fr}}
+.answers.three{grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
+button.act{min-height:48px;font:inherit;font-weight:700;border:0;border-radius:10px;padding:12px 16px;cursor:pointer;transition:.2s;font-size:15px}button.act:active{transform:scale(.98)}
+.primary{background:var(--b);color:#fff;width:100%;margin-top:16px}.primary:hover{background:#1e40af}.backbtn{background:#f3f4f6;color:#374151;width:100%;margin-top:8px}.backbtn:hover{background:#e5e7eb}.backbtn:disabled{opacity:.5;cursor:not-allowed}.yes{background:#dcfce7;color:#166534;border:2px solid #86efac}.yes:hover{background:#bbf7d0}.no{background:#ffe4e6;color:#9f1239;border:2px solid #fda4af}.no:hover{background:#ffcdd2}.partial{background:#ffedd5;color:#9a3412;border:2px solid #fdba74}.partial:hover{background:#fed7aa}
+.result{border-radius:12px;padding:18px;text-align:right;margin-bottom:14px}.green{background:#ecfdf3;border:2px solid #86efac;color:var(--g)}.yellow{background:#fffbeb;border:2px solid #fcd34d;color:var(--y)}.red{background:#fff1f2;border:2px solid #fda4af;color:var(--r)}.orange{background:#fff7ed;border:2px solid #fdba74;color:var(--o)}.result h2{text-align:center;margin:0 0 8px;font-size:20px}.result p{color:#334155;font-size:14px;margin:4px 0}
+.box{background:#f8fafc;border:1px solid var(--l);border-radius:10px;padding:14px;margin-top:12px}.box h3{margin:0 0 10px;font-size:14px;font-weight:700;color:var(--n)}
+.score{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--l);border-radius:10px;padding:12px;margin-top:12px}.score .num{font-size:32px;font-weight:800;color:var(--b)}.meterwrap{flex:1;height:12px;background:#e8eef7;border-radius:6px;overflow:hidden}.meter{height:100%;background:linear-gradient(90deg,var(--b),#2563eb)}.info{position:fixed;right:15px;bottom:15px;background:#fff;color:var(--b);border:1px solid #9db5ec;border-radius:50%;width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-weight:600;box-shadow:0 4px 12px #10233f22}
+.drawer{position:fixed;z-index:6;top:0;right:0;width:min(420px,95vw);height:100vh;background:#fff;padding:16px;box-shadow:-6px 0 20px #10233f22;transform:translateX(105%);transition:.25s;overflow:auto}.drawer.open{transform:translateX(0)}.shade{position:fixed;inset:0;background:#10233f66;display:none;z-index:5;backdrop-filter:blur(1px)}.shade.show{display:block}.close{width:100%;background:#f3f4f6;border:0;border-radius:10px;padding:10px;font-weight:700;cursor:pointer;font-size:14px;margin-bottom:14px;color:#374151}
+.term{background:#f8fafc;border:1px solid var(--l);border-radius:8px;padding:10px;margin:8px 0;font-size:13px}.sources a{display:block;color:var(--b);padding:8px 0;font-size:13px}.notes{margin-top:16px;padding:18px;font-size:13px;color:#334155}.notes h2{margin-top:0;font-size:16px;color:var(--n);margin-bottom:10px}.notes ol{padding-right:18px;margin:8px 0}.notes li{margin:6px 0;line-height:1.5}
+.grpbadge{display:inline-block;background:#e0e7ff;color:#3730a3;border-radius:6px;padding:3px 8px;font-size:11px;font-weight:700;margin-bottom:8px}
+.matrix-mobile{display:none}@media(max-width:720px){.matrix-mobile{display:block}.matrix-desktop{display:none}}
+.matrix-desktop{overflow-x:auto}.card-group{background:#f8fafc;border:1px solid var(--l);border-radius:10px;padding:14px;margin-bottom:12px}.card-group h4{margin:0 0 10px;font-size:14px;font-weight:700;color:var(--n)}.grp-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--l);font-size:13px}.grp-row:last-child{border:0}.grp-label{color:#536176;font-weight:600;flex:0 0 120px}.grp-val{flex:1;text-align:left;color:var(--n);font-weight:500;margin-right:10px}
+.regbadge{display:inline-block;border-radius:12px;padding:3px 8px;font-size:11px;font-weight:700;margin:2px;white-space:nowrap}.regbadge.gdpr{background:#dbeafe;color:#1e40af}.regbadge.ccpa{background:#fef3c7;color:#92400e}.regbadge.il{background:#d1fae5;color:#065f46}.regbadge.hipaa{background:#fce7f3;color:#9d174d}.regbadge.ukgdpr{background:#e0e7ff;color:#3730a3}.regbadge.pci{background:#fee2e2;color:#991b1b}
+table{width:100%;border-collapse:collapse;font-size:12px;margin-top:10px}th,td{border:1px solid var(--l);padding:10px;text-align:right}th{background:#f1f5fb;font-weight:700}.matrix-desktop th{padding:8px}.matrix-desktop td{padding:8px}
+.field{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}.field label{font-weight:600;color:var(--n);font-size:14px}.field input,.field select{padding:11px;border-radius:8px;border:1px solid var(--l);font-size:15px;font-family:inherit}.field input:focus,.field select:focus{border-color:var(--b);background:#eff6ff}
+.preview{background:#f8fafc;border:1px dashed #94a3b8;border-radius:8px;padding:10px;font-size:12px;color:#334155;margin-top:-4px;margin-bottom:12px}.preview b{color:var(--n);font-family:monospace}
+.minbanner{display:flex;gap:10px;align-items:flex-start;background:#ecfdf3;border:1px solid #86efac;border-radius:8px;padding:10px 12px;margin-bottom:12px;font-size:13px;color:#14532d;line-height:1.5}.minbanner b{color:#166534;font-weight:600}
+.moreinfo{background:#eef5ff;border:1px solid #c7d2fe;border-radius:8px;padding:11px 13px;margin-top:12px;font-size:13px}
+.tree{display:flex;flex-direction:column;gap:6px;font-size:12px}.tnode{border:2px solid var(--l);border-radius:8px;padding:10px;background:#fafcff;transition:.15s}.tnode.done{border-color:#86efac;background:#ecfdf3}.tnode.current{border-color:var(--b);background:#eff6ff;font-weight:600}.tnode.skip{opacity:.5;border-style:dashed}
+.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.toolbar button span{display:none}@media(min-width:600px){.toolbar button span{display:inline}}
+@media(max-width:480px){.card{padding:16px}.close{font-size:13px}.result h2{font-size:18px}.score{flex-direction:column;align-items:stretch}.score .num{font-size:28px}.lang-toggle{flex-direction:column;gap:4px}}
+@media print{.toolbar,.info,.side,.backbtn,.skip-link,.shade,.drawer{display:none!important}.grid{grid-template-columns:1fr}}
+</style></head><body>
+<a href="#main" class="skip-link">דלג לתוכן הראשי</a>
+<header>
+<div class="header-content">
+<h1>🔐 יועץ פרטיות לנושא עבודה עם ספקים</h1>
+</div>
+<div class="lang-toggle">
+<button class="lang-btn active" onclick="setLang('he')">עברית</button>
+<button class="lang-btn" onclick="setLang('en')">English</button>
+</div>
+<span class="version">v1.8.2</span>
+</header>
+<div class="wrap">
+<div class="toolbar" role="toolbar" aria-label="פעולות">
+<button onclick="openPanel('history')" aria-haspopup="dialog">📜 <span>היסטוריה</span></button>
+<button onclick="openPanel('treemap')" aria-haspopup="dialog">🗺️ <span>מפה</span></button>
+<button onclick="openInfo()" aria-haspopup="dialog">📖 <span>מונחים</span></button>
+<button onclick="openPanel('version')" aria-haspopup="dialog">🔍 <span>גרסה</span></button>
+
+</div>
+<div class="grid"><main class="card" id="main" role="form" aria-labelledby="stepLabel">
+<div class="step" id="step" role="status" aria-live="polite"></div>
+<div class="bar" role="progressbar" id="barWrap" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="bar"></i></div>
+<div class="pct" id="pct" aria-hidden="true">0%</div>
+<div id="content" aria-live="polite"></div>
+</main>
+<aside class="side" aria-label="סיכום"><h3 id="pathHeading">✓ הושלם</h3><div id="path" role="list"><small>עדיין לא התחלת</small></div><button class="act backbtn" onclick="restart()">↻ התחל מחדש</button></aside></div>
+
+
+</div>
+
+<button class="info" onclick="openInfo()" aria-haspopup="dialog">?</button>
+
+<div class="shade" id="shade" onclick="closeAll()"></div>
+<aside class="drawer" id="infoDrawer" role="dialog" aria-modal="true" aria-labelledby="infoTitle"><button class="close" onclick="closeAll()">סגור ✕</button><h2 id="infoTitle">מונחים</h2>
+<div class="term"><b>DPA</b> — הסכם עיבוד מידע</div>
+<div class="term"><b>Region</b> — אזור אחסון ועיבוד</div>
+<div class="term"><b>GDPR</b> — חוק אירופאי</div>
+<div class="term"><b>CCPA</b> — חוק קליפורניה</div>
+<div class="term"><b>IL Privacy</b> — חוק ישראלי</div>
+<div class="term"><b>HIPAA</b> — חוק רפואי US</div>
+<div class="term"><b>BAA</b> — הסכם שותף HIPAA</div>
+<div class="term"><b>SCC</b> — תנאים חוזיים סטנדרטיים</div>
+</aside>
+<aside class="drawer" id="historyDrawer" role="dialog" aria-modal="true" aria-labelledby="histTitle"><button class="close" onclick="closeAll()">סגור ✕</button><h2 id="histTitle">📜 היסטוריה</h2>
+<div class="toolbar" style="margin:10px 0;gap:6px">
+<button onclick="document.getElementById('importFile').click()" style="flex:1">ייבוא</button>
+<button onclick="exportHistoryFile()" style="flex:1">ייצוא</button>
+<button onclick="maskExistingHistory()" style="flex:1">מיסוך</button>
+<input type="file" id="importFile" accept=".json" class="visually-hidden" onchange="importHistoryFile(event)">
+</div>
+<div id="historyContent"></div></aside>
+<aside class="drawer" id="treeDrawer" role="dialog" aria-modal="true" aria-labelledby="treeTitle" style="width:min(440px,96vw)"><button class="close" onclick="closeAll()">סגור ✕</button><h2 id="treeTitle">🗺️ מפה</h2><div class="tree" id="treeContent"></div></aside>
+<aside class="drawer" id="versionDrawer" role="dialog" aria-modal="true" aria-labelledby="versionTitle" style="width:min(420px,95vw)"><button class="close" onclick="closeAll()">סגור ✕</button><h2 id="versionTitle">📌 גרסה 1.8.2</h2>
+<div style="font-size:13px;line-height:1.6;color:#334155">
+<div style="background:#eef5ff;border-right:4px solid var(--b);border-radius:8px;padding:11px 13px;margin-bottom:12px"><b>שינויים:</b></div>
+<ol style="padding-right:18px;margin:8px 0">
+<li style="margin:10px 0;line-height:1.5"><b>Header חדש:</b> "יועץ פרטיות לנושא עבודה עם ספקים" | גרסה בצד</li>
+<li style="margin:10px 0;line-height:1.5"><b>מידע לא נשמר:</b> הודעה ברורה על סודיות — "מידע לא נשמר במערכת"</li>
+<li style="margin:10px 0;line-height:1.5"><b>Business Owner:</b> שדה איש קשר לבעלים</li>
+<li style="margin:10px 0;line-height:1.5"><b>טוגל שפה:</b> עברית / English בראש (עדיין בפיתוח)</li>
+<li style="margin:10px 0;line-height:1.5"><b>Region ספק:</b> multi-select — אפשר לבחור יותר מאחד</li>
+<li style="margin:10px 0;line-height:1.5"><b>דרישת Region:</b> 5 אפשרויות התפלגות גיאוגרפית</li>
+<li style="margin:10px 0;line-height:1.5"><b>הסברים:</b> הוספתי הסברים ברורים לשאלות סבוכות</li>
+<li style="margin:10px 0;line-height:1.5"><b>קבוצות לקוחות:</b> הסבר מטריצה עם דוגמאות</li>
+</ol>
+</div></aside>
+
+<script>
+/* STATE */
+const S={
+  step:'names',history:[],answers:{},score:100,vendor:'ספק X',customer:'—',
+  groups:[],currentGroup:0,groupResults:{},regulations:[],bizModel:'',
+  dataVaries:false,groupData:{},lang:'he'
+};
+
+/* QUESTIONS DB */
+const STEPS=['names','bizModel','regulations','groups','dataTypes','subjects','sensitive',
+  'dpa','subs','vendorRegion','grpContract','grpMatch','regGdprBasis','regGdprDpia',
+  'regCcpaSale','regCcpaOptout','regIlMachzik','regIlTaqana','regHipaaBaa',
+  'externalAccess','transferMech','security','result'];
+
+const DATA_TYPES=['פרטי קשר','משתמשים','עובדים','פיננסי','רפואי','ביומטרי','ילדים','מזהה ממשלתי','אבטחה','עסקי'];
+const DATA_TYPES_DESC={'פרטי קשר':'דוא"ל, טלפון, כתובת','משתמשים':'משתמשי המערכת/הכלי','עובדים':'עובדי החברה שלכם','פיננסי':'חשבונות, תשלומים','רפואי':'בריאות, אבחנות','ביומטרי':'טביעות אצבע, פנים','ילדים':'קטינים מתחת 18','מזהה ממשלתי':'תעודה זהות, דרכון','אבטחה':'גישה ולוגים','עסקי':'חוזים וסודות'};
+const SUBJECTS=['לקוחות','משתמשים','עובדים','ספקים','מועמדים','ילדים','מטופלים','שותפים'];
+const SENSITIVE=['רפואי','ביומטרי','ילדים','פיננסי','מזהה ממשלתי','אין'];
+const REGIONS=['ישראל','EU / EEA','בריטניה','ארה״ב','קנדה','אחר'];
+const VENDOR_REGIONS=['EU / EEA','UK','US','IL','גלובלי'];
+const REGS=['IL Privacy','GDPR','UK GDPR','CCPA / CPRA','HIPAA','PCI-DSS'];
+const BIZ=['B2B','B2C','B2B + B2C','B2B2C'];
+
+function hasReg(r){return S.regulations.includes(r)}
+function penalty(n){S.score=Math.max(0,S.score-n)}
+function setLang(lang){S.lang=lang;document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));event.target.classList.add('active');alert('שפה: '+lang+' (בקרוב)');}
+
+/* RENDER */
+function el(id){return document.getElementById(id)}
+function announce(m){el('step').textContent=m}
+function progress(p){el('barWrap').setAttribute('aria-valuenow',p);el('bar').style.width=p+'%';el('pct').textContent=p+'%'}
+function focus(){setTimeout(()=>{let h=document.querySelector('#content h2,#content .q');if(h){h.setAttribute('tabindex','-1');h.focus()}},20)}
+function maskVendor(v){v=(v||'').trim().replace(/[^A-Za-z0-9\u0590-\u05FF \-_]/g,'');return v.slice(0,14)||'ספק X'}
+function maskPerson(v){let p=(v||'').trim().split(/\s+/);return p.length===0?'—':p.length===1?p[0]:p[0]+' '+p[p.length-1][0]+'׳'}
+
+function totalSteps(){
+  let n=12;
+  if(hasReg('GDPR')||hasReg('UK GDPR'))n+=2;
+  if(hasReg('CCPA / CPRA'))n+=2;
+  if(hasReg('IL Privacy'))n+=2;
+  if(hasReg('HIPAA'))n+=1;
+  return n;
+}
+
+/* MULTI SELECT */
+function renderMulti(id,title,options,explain){
+  announce('שלב '+(Object.keys(S.answers).length+1));
+  progress(Math.round(Object.keys(S.answers).length/totalSteps()*100));
+  let h=`<h2 class="q" tabindex="-1">${title}</h2>`;
+  if(explain)h+=`<div class="explain">${explain}</div>`;
+  let renderOpt=(x,i)=>{let desc=DATA_TYPES_DESC?.[x]||'';return `<li><label class="opt"><input type="checkbox" value="${i}" onchange="updateCheckmark('${id}')"><span>${desc?'<b>'+x+'</b><br><small style="color:#64748b">'+desc+'</small>':x}</span></label></li>`};
+  h+=`<fieldset style="border:0;padding:0;margin:0"><legend class="visually-hidden">${title}</legend><ul class="opts">${options.map(renderOpt).join('')}</ul></fieldset>`;
+  h+=`<button class="act primary" onclick="submitMulti('${id}')">המשך ◄</button><button class="act backbtn" onclick="goBack()">⏮ אחורה</button>`;
+  el('content').innerHTML=h;focus();
+}
+function updateCheckmark(id){let c=document.querySelectorAll('#content input:checked').length;if(c===0){document.querySelector('#content .primary').disabled=true}else{document.querySelector('#content .primary').disabled=false}}
+function submitMulti(id){
+  let vals=[...document.querySelectorAll('#content input:checked')].map(x=>Number(x.value));
+  if(vals.length===0)return alert('בחר לפחות אחד');
+  let opts=['dataTypes','subjects','sensitive','groups','regulations'].includes(id)?
+    id==='dataTypes'?DATA_TYPES:id==='subjects'?SUBJECTS:id==='sensitive'?SENSITIVE:id==='groups'?REGIONS:REGS:[];
+  S.answers[id]={q:id,v:vals.map(i=>opts[i]||'').join(', '),vals,labels:vals.map(i=>opts[i]||'')};
+  next(id);
+}
+
+/* REGION DISTRIBUTION */
+function renderRegionDist(id,title,explain){
+  announce('שלב '+(Object.keys(S.answers).length+1));
+  progress(Math.round(Object.keys(S.answers).length/totalSteps()*100));
+  let options=['כן - דרישה ברורה','לא - אין דרישה','הרוב באירופה, מעט בארה״ב','הרוב בארה״ב, מעט באירופה','מעט מאוד בארה״ב'];
+  let h=`<h2 class="q" tabindex="-1">${title}</h2>`;
+  if(explain)h+=`<div class="explain">${explain}</div>`;
+  h+=`<div class="answers">${options.map(x=>`<button class="act yes" style="margin-bottom:8px;text-align:center;padding:12px" onclick="submitRegionDist('${id}','${x.replace(/'/g,"\\'")}')"><span>${x}</span></button>`).join('')}</div>`;
+  h+=`<button class="act backbtn" onclick="goBack()">⏮ אחורה</button>`;
+  el('content').innerHTML=h;focus();
+}
+function submitRegionDist(id,v){
+  S.answers[id]={q:id,v};
+  next(id);
+}
+
+/* YES/NO */
+function renderYN(id,title,explain){
+  announce('שלב '+(Object.keys(S.answers).length+1));
+  progress(Math.round(Object.keys(S.answers).length/totalSteps()*100));
+  let h=`<h2 class="q" tabindex="-1">${title}</h2>`;
+  if(explain)h+=`<div class="explain">${explain}</div>`;
+  h+=`<div class="answers two"><button class="act yes" onclick="submitYN('${id}',true)">כן ✓</button><button class="act no" onclick="submitYN('${id}',false)">לא ✕</button></div>`;
+  h+=`<button class="act backbtn" onclick="goBack()">⏮ אחורה</button>`;
+  el('content').innerHTML=h;focus();
+}
+function submitYN(id,v){
+  S.answers[id]={q:id,v:v?'כן':'לא'};
+  next(id);
+}
+
+/* SINGLE */
+function renderSingle(id,title,options,explain){
+  announce('שלב '+(Object.keys(S.answers).length+1));
+  progress(Math.round(Object.keys(S.answers).length/totalSteps()*100));
+  let h=`<h2 class="q" tabindex="-1">${title}</h2>`;
+  if(explain)h+=`<div class="explain">${explain}</div>`;
+  h+=`<div class="answers three">${options.map(x=>`<button class="act yes" onclick="submitSingle('${id}','${x.replace(/'/g,"\\'")}')"><span>${x}</span></button>`).join('')}</div>`;
+  h+=`<button class="act backbtn" onclick="goBack()">⏮ אחורה</button>`;
+  el('content').innerHTML=h;focus();
+}
+function submitSingle(id,v){
+  S.answers[id]={q:id,v};
+  next(id);
+}
+
+function renderNames(){
+  announce('מזהה הבדיקה');progress(0);
+  el('content').innerHTML=`<h2 class="q" tabindex="-1">בדוק ספק</h2>
+<div class="minbanner"><b>🔐 מידע לא נשמר במערכת</b> — בדיקה זו אינה שומרת תיעוד של שמות ספקים או פרטי קשר.</div>
+<div class="field"><label for="vi">מזהה ספק</label><input id="vi" value="${S.vendor}" maxlength="14" oninput="el('previewBox').innerHTML='<b>'+maskVendor(el('vi').value)+'</b>'"><div class="preview" id="previewBox"><b>${maskVendor(S.vendor)}</b></div></div>
+<div class="field"><label for="ci">Business Owner / איש קשר (אופציונלי)</label><input id="ci" value="${S.customer!=='—'?S.customer:''}" oninput="el('cPreview').textContent=maskPerson(el('ci').value)"><div class="preview">איש קשר: <b id="cPreview">${maskPerson(S.customer)}</b></div></div>
+<button class="act primary" onclick="startQuiz()">התחל ◄</button>`;focus();
+}
+
+function startQuiz(){
+  S.vendor=maskVendor(el('vi').value);
+  S.customer=maskPerson(el('ci').value);
+  S.history.push('names');
+  S.step='bizModel';
+  render();
+}
+
+/* NAVIGATION */
+function render(){
+  let step=S.step;
+  let done=Object.keys(S.answers).length;
+  let tot=totalSteps();
+  updatePath();
+
+  if(step==='names')return renderNames();
+  if(step==='bizModel')return renderSingle('bizModel','מה המודל העסקי של החברה ? 📊 מודל עסקי',BIZ);
+  if(step==='regulations')return renderMulti('regulations','🏛️ רגולציות רלוונטיות',REGS,'בחר את כל החוקים שחלים. זה קובע את שאר השלבים.');
+  if(step==='groups')return renderMulti('groups','מה המיקום הגיאוגרפי של הלקוחות של החברה? 🌍',REGIONS,'<b>בחר את כל האזורים שיש בהם לקוחות.</b> כל אזור יהיה קבוצה נפרדת בתוצאה — זה חשוב כדי לבדוק התאמה של Region לדרישות כל קבוצה.');
+  if(step==='dataTypes')return renderMulti('dataTypes','📋 סוגי מידע',DATA_TYPES,'איזה מידע עובר לספק?');
+  if(step==='subjects')return renderMulti('subjects','👥 נושאי המידע',SUBJECTS,'על מי המידע מתייחס?');
+  if(step==='sensitive')return renderMulti('sensitive','🚨 מידע רגיש',SENSITIVE,'יש מידע רגיש בקטגוריות אלה?');
+  if(step==='dpa')return renderYN('dpa','📄 DPA חתום?','<b>חובה לפי כל החוקים.</b> ללא DPA — אין להעביר מידע.');
+  if(step==='subs')return renderYN('subs','🔗 Sub-processors מתועדים?','דרישת GDPR Art.28 וחוק IL.');
+  if(step==='vendorRegion')return renderMulti('vendorRegion','איפה הספק שומר את המידע בפועל? 🏪',VENDOR_REGIONS,'<b>בחר את כל האזורים שבהם הספק שומר פועלית את המידע.</b> אפשר לבחור יותר מאחד — נניח גם ארה״ב וגם אירופה. זה יעזור לבדוק התאמה עם דרישות הלקוחות.');
+  
+  // Per-group
+  if(step.startsWith('grpContract_')){let g=step.split('_')[1];let firstGroup=(S.groups[0]===g);let explain='האם לקוחות החברה הגדירו ברמת החוזה שמירת מידע לאזור מסוים ?';if(firstGroup)explain="<div style=\"background:#f3f4f6;border-right:4px solid #1f2937;border-radius:8px;padding:13px 14px;margin-bottom:14px;font-size:13px;line-height:1.6;color:#1f2937\">\n<b>🔍 למה שואלים את זה לכל אזור בנפרד?</b><br><br>\nכל אזור לקוחות עשוי להיות בעל דרישות שונות:<br>\n• <b>ישראל:</b> יכול לדרוש שמירה בישראל בלבד<br>\n• <b>EU:</b> דורש GDPR + data residency בEU<br>\n• <b>ארה״ב:</b> עשוי להיות גמיש יותר<br><br>\n<b>ההבדל הגדול:</b><br>\n<b>Region ספק</b> = עובדה (איפה ספק בפועל שומר)<br>\n<b>דרישת Region</b> = משפט (מה חוזה דורש)<br><br>\nההשוואה: אם Region ספק לא תואם דרישה כלשהי, תוצאה אדומה 🔴\n</div>"+explain;return renderRegionDist('grpContract_'+g,'<span class="grpbadge">'+g+'</span> דרישת Region בחוזה?',explain);}
+  if(step.startsWith('grpMatch_')){let g=step.split('_')[1];let vr=S.answers.vendorRegion?.v||'?';return renderSingle('grpMatch_'+g,'<span class="grpbadge">'+g+'</span> Region ספק ('+vr+') תואם?',['✅ כן','🟠 חלקי','❌ לא'],'בדוק מול דרישת החוזה.');}
+
+  // Regulatory
+  if(step==='regGdprBasis')return renderSingle('regGdprBasis','<span class="regbadge gdpr">GDPR</span> בסיס חוקי',['Consent','Contract','Legitimate Interest','חוקי חובה'],'Art.6 GDPR');
+  if(step==='regGdprDpia')return renderYN('regGdprDpia','<span class="regbadge gdpr">GDPR</span> האם יהיה DPIA במסגרת החוזה?','<b>Data Impact Assessment</b> נדרש כשיש:<br>• פרופיילינג או עדכון מידע אוטומטי<br>• מעקב שיטתי או בקנה מידה גדול<br>• החלטות אוטומטיות שמשפיעות על זכויות האדם<br><br>שאלה: האם הספק התחייב לביצוע DPIA או עבודה משותפת בו?');
+  if(step==='regCcpaSale')return renderYN('regCcpaSale','<span class="regbadge ccpa">CCPA</span> Sale/Share of PI?','האם הספק מוכר או משתף מידע תמורת תועלת?');
+  if(step==='regCcpaOptout')return renderYN('regCcpaOptout','<span class="regbadge ccpa">CCPA</span> Opt-out?','יש כפתור "Do Not Sell/Share"?');
+  if(step==='regIlMachzik')return renderYN('regIlMachzik','<span class="regbadge il">IL</span> ספק כמחזיק?','הוגדר בחוזה כמחזיק מידע?');
+  if(step==='regIlTaqana')return renderYN('regIlTaqana','<span class="regbadge il">IL</span> תקנה 15?','תיעוד מלא של המחזיק?');
+  if(step==='regHipaaBaa')return renderYN('regHipaaBaa','<span class="regbadge hipaa">HIPAA</span> BAA חתום?','לכל גורם שמקבל PHI.');
+  if(step==='externalAccess')return renderYN('externalAccess','🌐 גישה חוצת Region?','<b>האם הספק משתמש בספקים משניים (sub-processors) או בתמיכה טכנית שממוקמת בRegion שונה?</b><br><b>דוגמה:</b> ספק שומר את הנתונים בEU, אבל לוג גישה או תמיכה טכנית מ-US.');
+  if(step==='transferMech')return renderYN('transferMech','🔐 מנגנון העברה?','SCC, Adequacy, IDTA או מנגנון חוקי אחר?');
+  if(step==='security')return renderYN('security','🛡️ אבטחה ומחיקה?','הצפנה, MFA, מחיקה בסיום?');
+  if(step==='result')return renderResult();
+}
+
+function next(fromId){
+  S.history.push(S.step);
+  if(fromId==='bizModel'){S.bizModel=S.answers.bizModel.v;S.step='regulations';render();return;}
+  if(fromId==='regulations'){S.regulations=(S.answers.regulations?.labels)||[];S.step='groups';render();return;}
+  if(fromId==='groups'){S.groups=(S.answers.groups?.labels)||[];S.step='dataTypes';render();return;}
+  if(fromId==='dataTypes'){S.step='subjects';render();return;}
+  if(fromId==='subjects'){S.step='sensitive';render();return;}
+  if(fromId==='sensitive'){S.step='dpa';render();return;}
+  if(fromId==='dpa'){if(S.answers.dpa.v==='לא'){penalty(40);finishRed('DPA חסר');return;}S.step='subs';render();return;}
+  if(fromId==='subs'){if(S.answers.subs.v==='לא'){penalty(35);finishRed('Sub-processors לא מתועדים');return;}S.step='vendorRegion';render();return;}
+  if(fromId==='vendorRegion'){S.vendorRegions=(S.answers.vendorRegion?.labels)||[];if(S.groups.length>0){S.step='grpContract_'+S.groups[0];render();return;}S.step=nextRegStep();render();return;}
+  if(fromId.startsWith('grpContract_')){let g=fromId.split('_')[1];let ans=S.answers[fromId].v;if(ans==='לא - אין דרישה'){let gi=S.groups.indexOf(g);S.groupResults[g]={color:'green',note:'אין דרישה'};if(gi<S.groups.length-1){S.step='grpContract_'+S.groups[gi+1];render();return;}S.step=nextRegStep();render();return;}S.step='grpMatch_'+g;render();return;}
+  if(fromId.startsWith('grpMatch_')){let g=fromId.split('_')[1];let ans=S.answers[fromId].v;if(ans==='✅ כן')S.groupResults[g]={color:'green',note:'התאמה'};else if(ans==='🟠 חלקי'){S.groupResults[g]={color:'orange',note:'חלקי'};penalty(10);}else{S.groupResults[g]={color:'red',note:'אין התאמה'};penalty(15);}let gi=S.groups.indexOf(g);if(gi<S.groups.length-1){S.step='grpContract_'+S.groups[gi+1];render();return;}S.step=nextRegStep();render();return;}
+  if(fromId==='regGdprBasis'){S.step='regGdprDpia';render();return;}
+  if(fromId==='regGdprDpia'){S.step=nextAfterGdpr();render();return;}
+  if(fromId==='regCcpaSale'){S.step=S.answers.regCcpaSale.v==='כן'?'regCcpaOptout':nextAfterCcpa();render();return;}
+  if(fromId==='regCcpaOptout'){if(S.answers.regCcpaOptout.v==='לא')penalty(15);S.step=nextAfterCcpa();render();return;}
+  if(fromId==='regIlMachzik'){S.step='regIlTaqana';render();return;}
+  if(fromId==='regIlTaqana'){S.step=nextAfterIl();render();return;}
+  if(fromId==='regHipaaBaa'){if(S.answers.regHipaaBaa.v==='לא')penalty(40);S.step='externalAccess';render();return;}
+  if(fromId==='externalAccess'){S.step='transferMech';render();return;}
+  if(fromId==='transferMech'){if(S.answers.transferMech.v==='לא'){penalty(40);finishRed('חסר מנגנון העברה');return;}S.step='security';render();return;}
+  if(fromId==='security'){S.step='result';render();return;}
+}
+
+function nextRegStep(){
+  if(hasReg('GDPR')||hasReg('UK GDPR'))return 'regGdprBasis';
+  if(hasReg('CCPA / CPRA'))return 'regCcpaSale';
+  if(hasReg('IL Privacy'))return 'regIlMachzik';
+  if(hasReg('HIPAA'))return 'regHipaaBaa';
+  return 'externalAccess';
+}
+function nextAfterGdpr(){if(hasReg('CCPA / CPRA'))return 'regCcpaSale';if(hasReg('IL Privacy'))return 'regIlMachzik';if(hasReg('HIPAA'))return 'regHipaaBaa';return 'externalAccess';}
+function nextAfterCcpa(){if(hasReg('IL Privacy'))return 'regIlMachzik';if(hasReg('HIPAA'))return 'regHipaaBaa';return 'externalAccess';}
+function nextAfterIl(){if(hasReg('HIPAA'))return 'regHipaaBaa';return 'externalAccess';}
+
+function finishRed(msg){S.step='result';S.score=0;S.redStop=msg;render()}
+
+function goBack(){if(S.history.length===0){S.step='names';render();return;}S.step=S.history.pop();render()}
+function restart(){Object.assign(S,{step:'names',history:[],answers:{},score:100,vendor:'ספק X',customer:'—',groups:[],currentGroup:0,groupResults:{},regulations:[],bizModel:'',dataVaries:false,groupData:{},redStop:null});render()}
+
+function updatePath(){
+  let items=Object.entries(S.answers).map(([k,a])=>`<div class="item" style="display:flex;gap:8px;font-size:12px;margin-bottom:8px"><span style="font-weight:700;color:var(--g)">✓</span><span><b>${k}</b><br>${a.v}</span></div>`).join('');
+  el('path').innerHTML=items||'<small>עדיין לא התחלת</small>';
+}
+
+/* RESULT */
+function renderResult(){
+  announce('תוצאה');progress(100);
+  let worstGroup='green';
+  Object.values(S.groupResults).forEach(r=>{if(r.color==='red')worstGroup='red';else if(r.color==='orange'&&worstGroup!=='red')worstGroup='orange'});
+  let overall=S.redStop?'red':S.score<50?'red':S.score<70?'yellow':worstGroup==='red'?'red':worstGroup==='orange'?'orange':S.score<85?'yellow':'green';
+  let titles={'green':'🟢 אפשר להמשיך','yellow':'🟡 צריך השלמה','orange':'🟠 התאמה חלקית','red':'🔴 עצור'};
+
+  let h=`<div class="result ${overall}" tabindex="-1">
+<h2>${titles[overall]}</h2>
+<p><b>${S.vendor}</b>${S.customer!=='—'?' · '+S.customer:''} · ${S.bizModel}</p>`;
+  if(S.redStop)h+=`<p style="color:#9f1239"><b>סיבה:</b> ${S.redStop}</p>`;
+  h+=`<div class="score"><div class="num">${S.score}</div><div style="flex:1"><div class="meterwrap"><div class="meter" style="width:${S.score}%;background:${S.score>=85?'var(--g)':S.score>=70?'var(--y)':S.score>=50?'var(--o)':'var(--r)'};"></div></div><small>ניקוד</small></div></div>`;
+
+  // Regulations
+  if(S.regulations.length){h+=`<div class="box"><h3>רגולציות</h3>${S.regulations.map(r=>{let cls=r.includes('GDPR')?'gdpr':r.includes('CCPA')?'ccpa':r.includes('IL')?'il':r.includes('HIPAA')?'hipaa':'gdpr';return `<span class="regbadge ${cls}">${r}</span>`}).join('')}</div>`;}
+
+  // Groups matrix
+  if(S.groups.length>0){
+    let vr=S.answers.vendorRegion?.v||'—';
+    h+=`<div class="box"><h3>📊 קבוצות לקוחות</h3>
+    <div style="background:#f0f9ff;border-right:4px solid var(--b);border-radius:8px;padding:11px 13px;margin-bottom:12px;font-size:12px;line-height:1.5;color:#1e3a8a">
+      <b>הסבר:</b> כל קבוצה מייצגת אזור לקוחות שונה. הטבלה בודקת האם Region שבחר הספק תואם את דרישות כל קבוצת לקוחות:
+      <br><br>
+      • <b>אין התאמה:</b> דרישת לקוחות לא מתקיימת (ישראל דורשת שמירה בישראל, אבל ספק בEU)
+      <br>• <b>אין דרישה:</b> לא הוגדרה דרישת Region ברורה, ולכן Region הספק מקובל
+      <br>• <b>התאמה:</b> Region הספק תואם את דרישות הקבוצה (EU דורש EU, ספק בEU)
+    </div>`;
+    h+=`<div class="matrix-mobile">`;
+    S.groups.forEach(g=>{let gr=S.groupResults[g]||{color:'gray',note:'—'};let icon=gr.color==='green'?'✅':gr.color==='yellow'?'⚠️':gr.color==='orange'?'🟠':'❌';h+=`<div class="card-group"><h4>${icon} ${g}</h4><div class="grp-row"><span class="grp-label">Region ספק:</span><span class="grp-val">${vr}</span></div><div class="grp-row"><span class="grp-label">תוצאה:</span><span class="grp-val">${gr.note}</span></div></div>`;});
+    h+=`</div>`;
+    h+=`<div class="matrix-desktop"><table><tr><th>קבוצה</th><th>Region</th><th>תוצאה</th></tr>${S.groups.map(g=>{let gr=S.groupResults[g]||{note:'—'};return `<tr><td><b>${g}</b></td><td>${vr}</td><td>${gr.note}</td></tr>`}).join('')}</table></div>`;
+    h+=`</div>`;
+  }
+
+  h+=`<div class="toolbar" style="margin-top:14px;gap:6px"><button style="flex:1;background:#eef2ff;color:#3730a3;border:1px solid #c7d2fe;border-radius:8px;padding:10px;font-weight:700;cursor:pointer;font-size:13px" onclick="saveToHistory()">💾 שמור</button><button style="flex:1;background:#eef2ff;color:#3730a3;border:1px solid #c7d2fe;border-radius:8px;padding:10px;font-weight:700;cursor:pointer;font-size:13px" onclick="exportPDF()">📄 PDF</button></div>`;
+  h+=`<button class="act primary" onclick="restart()">✨ בדוק ספק נוסף ◄</button><button class="act backbtn" onclick="goBack()">⏮ אחורה</button>`;
+  el('content').innerHTML=h;focus();
+}
+
+/* HISTORY */
+function loadHistory(){try{return JSON.parse(localStorage.getItem('privacyCheckerV182')||'[]')}catch(e){return[]}}
+function saveHistoryList(list){localStorage.setItem('privacyCheckerV182',JSON.stringify(list))}
+function saveToHistory(){let list=loadHistory();list.unshift({date:new Date().toLocaleString('he-IL'),vendor:S.vendor,score:S.score});saveHistoryList(list);alert('נשמר ✓')}
+function renderHistory(){let list=loadHistory();el('historyContent').innerHTML=list.length?`<table style="font-size:12px"><tr><th>תאריך</th><th>ספק</th><th>ניקוד</th></tr>${list.map((x,i)=>`<tr><td>${x.date.split(' ')[0]}</td><td>${x.vendor}</td><td style="text-align:center">${x.score}</td></tr>`).join('')}</table><button class="close" onclick="clearHistory()">🗑️ מחק הכל</button>`:'<p>אין בדיקות שנשמרו</p>'}
+function clearHistory(){if(confirm('למחוק הכל?')){saveHistoryList([]);renderHistory()}}
+function maskExistingHistory(){let l=loadHistory();l.forEach(x=>x.vendor=maskVendor(x.vendor));saveHistoryList(l);renderHistory();alert('מוסך ✓')}
+function exportHistoryFile(){let b=new Blob([JSON.stringify(loadHistory(),null,2)],{type:'application/json'});let u=URL.createObjectURL(b);let a=document.createElement('a');a.href=u;a.download='privacy_history.json';a.click();URL.revokeObjectURL(u)}
+function importHistoryFile(e){let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=ev=>{try{saveHistoryList(JSON.parse(ev.target.result).concat(loadHistory()));renderHistory();alert('יובא ✓')}catch(err){alert('שגיאה')}};r.readAsText(f)}
+
+/* EXPORT */
+async function exportPDF(){alert('הייצוא זמין בגרסה בעלת API הקצאה מלאה. כרגע: צילום מסך + שמירה.')}
+
+/* TREE */
+function renderTree(){let nodes=[{l:'1. מזהה ספק',id:'names'},{l:'2. מודל עסקי',id:'bizModel'},{l:'3. רגולציות',id:'regulations'},{l:'4. קבוצות',id:'groups'},{l:'5. מידע',id:'dataTypes'},{l:'6. נושאים',id:'subjects'},{l:'7. רגיש',id:'sensitive'},{l:'8. DPA',id:'dpa'},{l:'9. Sub-proc',id:'subs'},{l:'10. Region ספק',id:'vendorRegion'},{l:'11–12. לכל קבוצה',id:'grpContract'},{l:'13–16. רגולציות',id:'regGdpr'},{l:'17–19. גישה + כלים',id:'externalAccess'},{l:'20. תוצאה',id:'result'}];let done=new Set(Object.keys(S.answers));el('treeContent').innerHTML=nodes.map(n=>{let cls='tnode'+(done.has(n.id)||S.step===n.id?' current':'')+(S.step==='result'&&n.id==='result'?' done':'');return `<div class="${cls}">${n.l}</div>`}).join('')}
+
+/* PANELS */
+function openInfo(){closeAll();el('infoDrawer').classList.add('open');el('shade').classList.add('show')}
+function openPanel(w){closeAll();if(w==='history'){renderHistory();el('historyDrawer').classList.add('open')}else if(w==='version'){el('versionDrawer').classList.add('open')}else{renderTree();el('treeDrawer').classList.add('open')}el('shade').classList.add('show')}
+
+function closeAll(){['infoDrawer','historyDrawer','treeDrawer','versionDrawer'].forEach(id=>el(id).classList.remove('open'));el('shade').classList.remove('show')}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll()});
+
+render();
+</script></body></html>
