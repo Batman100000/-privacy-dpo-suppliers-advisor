@@ -1,62 +1,63 @@
 # Privacy Advisor Tool — Changelog
 
+## v1.8.3.4 (2026-08-08)
+
+### Deepened Concept Explanations & Sub-Processor Examples
+- **Results Summary Expanded:**
+  - Legal gap definition with real example (Israel contract vs EU storage)
+  - Sub-Processor example: "Vendor in Israel (✅) but uses AWS US backup (❌)"
+  - Detailed fixes: DPA, SCCs, Sub-processor approvals
+  - Partial risk explanation with Sub-Processor checks
+
+- **Groups Table Enhanced with Deep Explanations:**
+  - ✅ Green: Added Sub-Processor verification reminder
+  - ❌ Red (with DPA): "Check DPA Sub-Processor coverage"
+  - ❌ Red (planned DPA): "DPA must cover Sub-Processors"
+  - ❌ Red (no DPA): "Israel contract vs US storage = GDPR issue"
+  - 🟠 Orange: "Check Sub-Processor list + DPA coverage"
+
+- **GDPR Legal Basis Deepened:**
+  - Comprehensive "why it matters" explanation
+  - Real SaaS examples for each basis type:
+    - Contract: "Gmail needs email to work"
+    - Legitimate Interest: "Analytics, security, updates"
+    - Consent: "Marketing only"
+    - Legal Obligation: "Tax records, AML"
+  - Sub-Processor example: "Google Analytics vs Stripe - both need same legal basis"
+
+- **Impact:** Users understand not just what to do, but WHY and the consequences
+
+---
+
 ## v1.8.3.3 (2026-08-08)
 
 ### Enhanced Explanations - Results Clarity
-- **Results Summary:** Added detailed explanations for each risk level:
-  - ✅ **Pass:** "כל קבוצות הלקוחות בהתאמה מלאה" - no action needed
-  - ❌ **High Risk:** "מרווח משפטי!" - explains what legal gap means + required actions
-  - 🟠 **Partial Risk:** Explains partial matches + DPA/Sub-processor checks
-  
-- **Groups Table Enhanced:**
-  - Added explanation column for each group
-  - ✅ Green: "Region matches, no action"
-  - ❌ Red (with DPA): "Legal gap exists but DPA signed - review coverage"
-  - ❌ Red (planned DPA): "Legal gap + DPA in process - ensure implementation"
-  - ❌ Red (no DPA): "⚠️ CRITICAL: Legal gap without DPA - must sign or change region"
-  - 🟠 Orange: "Partial risk - check Sub-processors details"
-
-- **GDPR Legal Basis:** Added comprehensive explanation box:
-  - What is a legal basis and why it matters
-  - Consequences of choosing wrong basis
-  - Examples of common mistakes
-  - Validation reminder to match real business practices
-
-- **Impact:** Users now understand exactly what each status means and what to do about it
+- Results summary with detailed risk level explanations
+- Groups table with explanation column
+- GDPR legal basis education box
 
 ---
 
 ## v1.8.3.2 (2026-08-08)
 
-### UI Clarity Improvements - Results Page Redesign
-- Renamed "מזהה ספק" to "שם הספק"
-- Simplified groups section explanations
-- Changed table headers to be more action-oriented: "דורש / מצב / פעולה נדרשת"
-- Shortened action text for clarity
+### UI Clarity - Renamed Fields
+- "מזהה ספק" → "שם הספק"
+- Redesigned groups results section
 
 ---
 
 ## v1.8.3.1 (2026-08-08)
 
-### Smart HIPAA Filtering - Only Shows for Medical Data
-- HIPAA question only appears if medical/PHI data was selected
-- Added `hasPhysicalData()` function
-- Updated navigation logic
+### Smart HIPAA Filtering
+- Only show HIPAA question for medical data
 
 ---
 
 ## v1.8.3.0 (2026-08-08)
 
-### Major Release - Simplified Groups & Smart DPA Analysis
-- Simplified customer groups: EU/EEA → EU
-- Removed UK from vendor regions
-- Smart DPA recommendations based on responses
-
----
-
-## v1.8.2.9-v1.8.2.4
-
-Previous release cycles with progressive improvements
+### Major Release
+- Simplified groups (EU/EEA → EU)
+- Smart DPA analysis
 
 ---
 
